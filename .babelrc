@@ -1,0 +1,5 @@
+{
+  "sourceRoot": "./src",
+  "moduleRoot": "./src",
+  "presets": ["es2015"]
+}

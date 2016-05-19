@@ -1,0 +1,1 @@
+inspired by this [starter kit](https://github.com/shvelo/phaser-es6-template)

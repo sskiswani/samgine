@@ -1,0 +1,25 @@
+{
+  "name": "sskiswani",
+  "version": false,
+  "dependencies": {},
+  "ambientDependencies": {
+    "Q": "github:DefinitelyTyped/DefinitelyTyped/q/Q.d.ts#5c3e47967affa3c4128a3875d1664ba206ae1b0f",
+    "chokidar": "registry:dt/chokidar#1.4.3+20160316155526",
+    "del": "registry:dt/del#2.2.0+20160317120654",
+    "es6-shim": "registry:dt/es6-shim#0.31.2+20160317120654",
+    "express": "registry:dt/express#4.0.0+20160317120654",
+    "express-serve-static-core": "registry:dt/express-serve-static-core#0.0.0+20160322035842",
+    "glob": "registry:dt/glob#5.0.10+20160317120654",
+    "gulp": "registry:dt/gulp#3.8.0+20160316155526",
+    "gulp-load-plugins": "registry:dt/gulp-load-plugins#0.0.0+20160316155526",
+    "gulp-shell": "registry:dt/gulp-shell#0.0.0+20160316155526",
+    "mime": "registry:dt/mime#0.0.0+20160316155526",
+    "minimatch": "registry:dt/minimatch#2.0.8+20160317120654",
+    "node": "registry:dt/node#6.0.0+20160514165920",
+    "orchestrator": "registry:dt/orchestrator#0.0.0+20160316155526",
+    "run-sequence": "registry:dt/run-sequence#0.0.0+20160316155526",
+    "serve-static": "registry:dt/serve-static#0.0.0+20160501131543",
+    "systemjs": "registry:dt/systemjs#0.18.4+20160417155658",
+    "zone.js": "registry:dt/zone.js#0.0.0+20160316155526"
+  }
+}

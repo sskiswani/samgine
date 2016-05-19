@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"target": "ES5",
+		"moduleResolution": "node",
+		"sourceMap": true,
+		"allowJs": true,
+		"allowSyntheticDefaultImports": true,
+		"noImplicitAny": false,
+		"preserveConstEnums": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
+	},
+	"filesGlob": [
+		"./src/**/*.ts",
+		"./typings/**/*.ts"
+	]
+}
