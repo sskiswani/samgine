@@ -1,5 +1,5 @@
 #samgine
-My Typescript game-development bootstrapper. The two important parts you can get to using `import { Engine, ECS } from './core'`
+My Typescript game-development bootstrapper. The two important parts you can get to using `import { Engine, ECS } from './src/core'`
 - `ECS` (`./src/core/ecs`) is an entity-component-system that makes use of decorators (no need to manually register components before usage, a requirement of _every_ implementation that I've found thus far).
 - `Engine` (`./src/core/Engine`) provides a ['fixed timestep'](http://gafferongames.com/game-physics/fix-your-timestep/) update-render loop.
   - `engine.on('tick', callback)` will be called at the beginning of every frame.
