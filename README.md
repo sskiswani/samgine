@@ -79,7 +79,7 @@ export class MoveEntitySystem extends EntitySystem {
     }
 }
 ```
-Once a system is registered, the `src/core/ecs/EntityWorld` will take care of it.
+Once a system is registered, `src/core/ecs/EntityWorld` will take care of it.
 ```js
 // Create and register the system to the world.
 const entityWorld = new EntityWorld();
