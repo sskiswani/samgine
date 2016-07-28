@@ -1,12 +1,17 @@
 #samgine
-My Typescript game-development bootstrapper. The two important parts you can get to using `import { Engine, ECS } from './src/core'`
+A work in progress Typescript game-development bootstrapper (probably more useful as a reference).
+
+- `gulp` (defaults to `gulp dev`) for development, which will watch files for changes and update accordingly (manually refreshing the browser)
+- `gulp build` to get a complete build of the project in the `./bin` directory.
+
+To get a handle on the important stuff `import { Engine, ECS } from './src/core'`.
 - `ECS` (`./src/core/ecs`) is an entity-component-system that makes use of decorators (no need to manually register components before usage, a requirement of _every_ implementation that I've found thus far).
 - `Engine` (`./src/core/Engine`) provides a ['fixed timestep'](http://gafferongames.com/game-physics/fix-your-timestep/) update-render loop.
   - `engine.on('tick', callback)` will be called at the beginning of every frame.
   - `engine.on('update', callback)` will be called as many times as possible every frame (and at least once).
   - `engine.on('render', callback)` will be called at the end of every frame.
-- `'src/core/services/Input'` provides a 
-  
+- `'src/core/services/Input'` provides a
+
 ##Examples
 
 ###Entities and Components
@@ -19,7 +24,7 @@ import {ComponentMixin} from './src/core/ecs/Component'
 export class Position {
     public x:number;
     public y: number;
-    
+
     constructor(x = 0, y = 0) {
       this.x = x;
       this.y = y;
@@ -38,7 +43,7 @@ const entity = new ECS.Entity().add(new Position(50, 50));
 world.insertEntity(entity);
 
 // et voila!
-console.info(`An entity at (${entity.Get(Position).x}, ${entity.Get(Position).y})`); 
+console.info(`An entity at (${entity.Get(Position).x}, ${entity.Get(Position).y})`);
 ```
 
 ###Entity Systems
@@ -49,25 +54,25 @@ import { Position } from './src/your_game/components'
 @RequireComponents(Position)
 export class MoveEntitySystem extends EntitySystem {
     public pixelsPerSecond = 10;
-    
+
     constructor() {
       super({active: true});
     }
-    
+
     // Is this system interested in the entity?
     interested(entity: IEntity) {
       // leverage the 'aspect' created via the RequireComponents decorator
       return this.aspect.every(componentId => entity.has(componentId));
     }
-    
+
     insert(entity: IEntity) {
-      console.info(`Inserted entity with a position component!`, entity.get(Position)); 
+      console.info(`Inserted entity with a position component!`, entity.get(Position));
     }
-    
+
     remove(entity: IEntity) {
       console.info(`Removed entity with a position component!`, entity.get(Position));
     }
-    
+
     update(dt: number) {
       let pos = entity.get(Position);
       pos.x += pixelsPerSecond * dt;
