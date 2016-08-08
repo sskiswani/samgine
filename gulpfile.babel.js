@@ -60,11 +60,6 @@ gulp.task('copy-libs', gulp.parallel(
 ));
 
 gulp.task('copy-assets', makeCopyTask(paths.static, { base: dirs.assets }, `${dirs.out}/assets`));
-// gulp.task('copy-assets', gulp.series(
-//     makeCopyTask(paths.static, { base: dirs.assets }, `${dirs.out}/assets`),
-//     'gen-asset-list'
-// ));
-
 gulp.task('copy-html', makeCopyTask(paths.index, dirs.out));
 gulp.task('copy', gulp.parallel('copy-html', 'copy-assets', 'copy-libs'));
 
@@ -83,19 +78,16 @@ function logError(err) {
     // this.emit('end');
 }
 
-const compilerOptions = tsconfig.compilerOptions;
-const tsifyConfig = _.extend({ typescript: typescript }, tsconfig);
-
 var b = watchify(
     browserify({
         entries: [scripts.jsEntry],
         extensions: ['.ts', '.js'],
         debug: true,
         insertGlobals: true,
-        fullPaths: true // Requirement of watchify
+        fullPaths: true
     })
-        .add('typings/main.d.ts')
-        .plugin(tsify, tsconfig.compilerOptions));
+    .add('typings/main.d.ts')
+    .plugin(tsify, { typescript: typescript }));
 
 gulp.task('browserify', bundle);
 b.on('update', bundle);
