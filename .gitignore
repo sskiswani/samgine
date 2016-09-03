@@ -2,8 +2,6 @@
 *.log
 node_modules
 typings
-.vscode
-lib
 bin
 bin.zip
 .idea
