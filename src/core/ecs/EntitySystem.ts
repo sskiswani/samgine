@@ -1,9 +1,9 @@
 import * as _ from 'lodash'
 import * as EventEmitter from 'eventemitter3'
-import {BitSet} from '../lib'
-import {IEventEmitter} from '../Types'
-import {IEntity} from './Entity'
-import {EntityWorld} from './EntityWorld'
+import { BitSet } from '../lib'
+import { IEventEmitter } from '../Types'
+import { IEntity } from './Entity'
+import { EntityWorld } from './EntityWorld'
 
 // - - - - - - - - - - - - - - - - - - - - -
 

@@ -1,5 +1,4 @@
-import {ECS, Engine, Utils} from './core'
-import Input from './core/services/Input'
+import { ECS, Engine, Utils } from './core'
 
 //~ on load Callback
 Engine.on('loaded', () => {
@@ -14,13 +13,6 @@ Engine.on('loaded', () => {
 
     //~ Wire events together
     Engine.on('update', (dt) => world.update(dt));
-    Engine.on('tick', Input.tick.bind(Input));
-
-    //~ Sync input to pixi.renderer view
-    Input.domEmitter = Engine.view;
-    Input.on('mousedown', (ev: MouseEvent) =>
-        console.log('mouse down', ev)
-    );
 
     //~ Simple PIXI renderer
     Engine.on('render', (dt) => {

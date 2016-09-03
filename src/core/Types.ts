@@ -14,7 +14,7 @@ export interface NumericDictionary<T> {
     [index: number]: T;
 }
 
-export type Emitter = PIXI.utils.EventEmitter | IEventEmitter | EventEmitter3.EventEmitter;
+export type Emitter = PIXI.EventEmitter | IEventEmitter | EventEmitter3.EventEmitter;
 export interface IEventEmitter {
     /**
      * Return a list of assigned event listeners.

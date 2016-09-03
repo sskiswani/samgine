@@ -1,9 +1,9 @@
 import * as _ from 'lodash'
 import * as EventEmitter from 'eventemitter3'
-import {BitSet} from '../lib'
-import {IEventEmitter} from '../Types'
-import {IComponent, ComponentIdentifier, register, lookup} from './Component'
-import {EntityWorld} from './EntityWorld'
+import { BitSet } from '../lib'
+import { IEventEmitter } from '../Types'
+import { IComponent, ComponentIdentifier, register, lookup } from './Component'
+import { EntityWorld } from './EntityWorld'
 
 // - - - - - - - - - - - - - - - - - - - - -
 //~ Interface

@@ -1,20 +1,14 @@
 import * as _ from 'lodash'
 // import * as EventEmitter from 'eventemitter3'
-import {getClassName} from '../Utils'
-import {BitSet} from '../lib'
-import {IEntitySystem} from './EntitySystem'
-import {IEntity} from './Entity'
+import { getClassName } from '../Utils'
+import { BitSet } from '../lib'
+import { IEntitySystem } from './EntitySystem'
+import { IEntity } from './Entity'
 
 // - - - - - - - - - - - - - - - - - - - - -
 
 interface Mapping {
     [$key: string]: number
-}
-
-// - - - - - - - - - - - - - - - - - - - - -
-
-function PropertyDecorator(target: Object, propertyKey: string | symbol) {
-    console.log("PropertyDecorator called on: ", target, propertyKey);
 }
 
 // - - - - - - - - - - - - - - - - - - - - -
@@ -31,9 +25,7 @@ export class EntityWorld {
     get entities() { return this._entities; }
     get systems() { return this._systems; }
 
-    constructor() {
-
-    }
+    constructor() { }
 
     initialize() {
         this._initialized = true;

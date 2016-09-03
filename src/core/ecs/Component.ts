@@ -165,25 +165,3 @@ export function getMappinggetMapping(lookup: ComponentIdentifier, safe = false) 
 export function lookup(lookup: ComponentIdentifier, safe = false): IComponent {
     return ComponentMapper.lookup(lookup, safe);
 };
-
-@ComponentMixin
-export class TestComponent {
-    static $name = "duuude";
-
-    constructor() {
-        // console.log('testcomponent ctor');
-    }
-
-    get test() { return 'hello!' }
-}
-
-@ComponentMixin
-export class OtherComponent {
-    constructor() {
-        // console.log('other ctor');
-    }
-
-    testOther = 'other hello!!'
-}
-// console.info('test inst', new TestComponent());
-// console.info('test type', TestComponent);

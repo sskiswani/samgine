@@ -10,7 +10,7 @@ To get a handle on the important stuff `import { Engine, ECS } from './src/core'
   - `engine.on('tick', callback)` will be called at the beginning of every frame.
   - `engine.on('update', callback)` will be called as many times as possible every frame (and at least once).
   - `engine.on('render', callback)` will be called at the end of every frame.
-- `'src/core/services/Input'` provides a
+
 
 ##Examples
 
