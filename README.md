@@ -1,5 +1,5 @@
 #samgine
-A **work in progress** Typescript game-development bootstrapper (probably more useful as a reference).
+A **work in progress** Typescript game-development bootstrapper (probably more useful as a reference). Clone the repo and begin writing code at `./src/index.ts`.
 
 - `gulp` (defaults to `gulp dev`) for development, which will watch files for changes and update accordingly (manually refreshing the browser)
 - `gulp build` to get a complete build of the project in the `./bin` directory.
@@ -31,7 +31,9 @@ export class Position {
     }
 }
 ```
+
 Combining with entity creation and registration becomes:
+
 ```js
 import { ECS } from './src/core'
 import { Position } from './src/your_game/components'
