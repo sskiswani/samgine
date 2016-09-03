@@ -9,8 +9,8 @@ const taskUtils = require('./gulp/utils');
 const bundler = require('./gulp/bundler');
 //~
 const config = {
-    rootDir: './src/app',
-    outDir: './bin/app',
+    rootDir: './src',
+    outDir: './bin',
     bundleName: 'bundle.js',
 
     //~ assets
@@ -19,8 +19,8 @@ const config = {
     //~ third party
 
     //~ scripts
-    get scripts() { return `${this.rootDir}/**/*.tsx`; },
-    get entry() { return [`${this.rootDir}/index.tsx`]; },
+    get scripts() { return `${this.rootDir}/**/*.ts`; },
+    get entry() { return [`${this.rootDir}/index.ts`]; },
 
     get bundleDest() { return `${this.outDir}`; },
     get bundleResult() { return `${this.outDir}/${this.bundleName}`; }

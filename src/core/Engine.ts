@@ -1,8 +1,8 @@
 import * as EventEmitter from 'eventemitter3'
 import * as _ from 'lodash'
-import {IScreen} from './Screen'
-import {PIXIRenderer} from './Types'
-import {timestamp} from './Utils'
+import { IScreen } from './Screen'
+import { PIXIRenderer } from './Types'
+import { timestamp } from './Utils'
 
 interface InitializationConfig {
     width?: number;

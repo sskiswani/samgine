@@ -1,8 +1,9 @@
 {
-  "ambientDependencies": {
-    "big.js": "registry:dt/big.js#0.0.0+20160317120654",
+  "dependencies": {
+    "lodash": "registry:npm/lodash#4.0.0+20160723033700"
+  },
+  "globalDependencies": {
     "eventemitter3": "registry:dt/eventemitter3#1.1.1+20151208234524",
-    "lodash": "registry:dt/lodash#3.10.0+20160330154726",
-    "pixi.js": "registry:dt/pixi.js#3.0.9+20160404013751"
+    "pixi.js": "registry:dt/pixi.js#3.0.9+20160825215559"
   }
 }

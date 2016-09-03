@@ -1,29 +1,28 @@
 {
-    "compilerOptions": {
-        "baseUrl": "./src/app/",
-        "outDir": "./bin/",
-        "sourceMap": true,
-        "noImplicitAny": false,
-        "allowJs": false,
-        "module": "commonjs",
-        "moduleResolution": "node",
-        "target": "es5",
-        "jsx": "react",
-        "removeComments": true,
-        "preserveConstEnums": true,
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
-        "noEmitOnError": true
-    },
-    "include": [
-        "./typings/index.d.ts",
-        "./src/app/index.tsx",
-        "./src/app/**.tsx",
-        "./src/app/**.ts"
-    ],
-    "exclude": [
-        "bin",
-        "node_modules",
-        "**/*.spec.ts"
-    ]
+	"compilerOptions": {
+		"baseUrl": "./src/app/",
+		"outDir": "./bin/",
+		"sourceMap": true,
+		"noImplicitAny": false,
+		"allowJs": false,
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"target": "es5",
+		"jsx": "react",
+		"removeComments": true,
+		"preserveConstEnums": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"noEmitOnError": true
+	},
+	"include": [
+		"./typings/index.d.ts",
+		"./src/index.ts",
+		"./src/**.ts"
+	],
+	"exclude": [
+		"bin",
+		"node_modules",
+		"**/*.spec.ts"
+	]
 }
