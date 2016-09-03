@@ -17,6 +17,7 @@ const config = {
     get html() { return `${this.rootDir}/**/*.html`; },
 
     //~ third party
+    get pixi() { return `./node_modules/pixi.js/bin/pixi.min.js`},
 
     //~ scripts
     get scripts() { return `${this.rootDir}/**/*.ts`; },
@@ -31,12 +32,12 @@ global.config = config;
 // - - - - - - - - - - - - - - - - - - - - -
 
 //~ Clean
-gulp.task('clean:app', () => del.sync(config.outDir));
 gulp.task('clean', () => del.sync('./bin'));
 
 //~ Copy
+gulp.task('copy:pixi', () => taskUtils.copy(config.pixi, config.outDir));
 gulp.task('copy:html', () => taskUtils.copy(config.html, config.outDir));
-gulp.task('copy', ['copy:html']);
+gulp.task('copy', ['copy:html', 'copy:pixi']);
 
 
 //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
