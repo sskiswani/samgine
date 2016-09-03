@@ -1,6 +1,8 @@
 #samgine
 A **work in progress** Typescript game-development bootstrapper (probably more useful as a reference). Clone the repo, run the command `npm install` and start coding with `./src/index.ts`.
 
+**NOTE:** although pixi.js is included, its not hooked up in a convenient way -- thanks to my inability to come up with a good way to make it as convenient as possible.
+
 - `gulp` (defaults to `gulp dev`) for development, which will watch files for changes and update accordingly (manually refreshing the browser)
 - `gulp build` to get a complete build of the project in the `./bin` directory.
 
