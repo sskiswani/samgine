@@ -17,6 +17,7 @@
     "gulp-sass": "^2.3.2",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-util": "^3.0.7",
+    "reflect-metadata": "^0.1.8",
     "run-sequence": "^1.2.2",
     "tsify": "^1.0.3",
     "typescript": "^2.1.0-dev.20160807",
