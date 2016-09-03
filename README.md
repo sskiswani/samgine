@@ -1,5 +1,5 @@
 #samgine
-A work in progress Typescript game-development bootstrapper (probably more useful as a reference).
+A **work in progress** Typescript game-development bootstrapper (probably more useful as a reference).
 
 - `gulp` (defaults to `gulp dev`) for development, which will watch files for changes and update accordingly (manually refreshing the browser)
 - `gulp build` to get a complete build of the project in the `./bin` directory.
