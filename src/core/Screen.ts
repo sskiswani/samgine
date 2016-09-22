@@ -1,5 +1,3 @@
-import { EventEmitter } from "eventemitter3";
-
 export interface IScreen {
     show();
     dispose();

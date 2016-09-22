@@ -4,12 +4,12 @@ import * as Utils from "./Utils";
 import Engine from "./Engine";
 
 //~ directories
-export * from "./ecs";
-
+import * as ECS from "./ecs";
 import * as ThirdParty from "./lib";
 
 export {
     Engine,
+    ECS,
     ThirdParty,
     Types,
     Screen,

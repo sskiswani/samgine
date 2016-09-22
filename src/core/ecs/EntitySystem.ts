@@ -1,7 +1,7 @@
 import { BitSet } from "../lib";
 import { IEntity } from "./Entity";
 import { EntityWorld } from "./EntityWorld";
-import { EventEmitter } from "eventemitter3";
+import * as EventEmitter from "eventemitter3";
 
 /**
  * Decorator that allows specifying components as required for a system.

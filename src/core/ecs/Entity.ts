@@ -1,7 +1,7 @@
 import { BitSet } from "../lib";
 import { ComponentIdentifier, IComponent, lookup } from "./Component";
 import { EntityWorld } from "./EntityWorld";
-import { EventEmitter } from "eventemitter3";
+import * as EventEmitter from "eventemitter3";
 import * as _ from "lodash";
 
 // - - - - - - - - - - - - - - - - - - - - -

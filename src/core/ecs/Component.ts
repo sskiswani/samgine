@@ -25,7 +25,7 @@ export function ComponentMixin<T extends Function>(ctor: T): T {
 
 export function NamedComponent(name: string) {
     return function <T extends Function>(ctor: T): T {
-        if (!ctor["$name"]) { ctor["$name"] = name;}
+        if (!ctor["$name"]) { ctor["$name"] = name; }
         let mapping = ComponentMapper.register(ctor, name);
 
         // assign props to the component so it implements IComponent
@@ -51,7 +51,7 @@ function _assert(
 
 export class ComponentMapper {
     //~ toggles
-    public static assertions = true;
+    public static assertions: boolean = true;
 
     //~ management
     private static _mapping: IComponentMap = {};
@@ -161,6 +161,5 @@ export function getMappinggetMapping(lookup: ComponentIdentifier, safe = false) 
 }
 
 export function lookup(lookup: ComponentIdentifier, safe = false): IComponent {
-    debugger;
     return ComponentMapper.lookup(lookup, safe);
 };
