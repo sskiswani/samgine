@@ -1,13 +1,12 @@
-import * as _ from 'lodash'
-import * as EventEmitter from 'eventemitter3'
-import { BitSet } from '../lib'
-import { IEventEmitter } from '../Types'
-import { IComponent, ComponentIdentifier, register, lookup } from './Component'
-import { EntityWorld } from './EntityWorld'
+import { BitSet } from "../lib";
+import { ComponentIdentifier, IComponent, lookup } from "./Component";
+import { EntityWorld } from "./EntityWorld";
+import { EventEmitter } from "eventemitter3";
+import * as _ from "lodash";
 
 // - - - - - - - - - - - - - - - - - - - - -
 //~ Interface
-export interface IEntity extends IEventEmitter {
+export interface IEntity extends EventEmitter {
     active: boolean;
     tag: string;
 
@@ -32,13 +31,12 @@ export interface IEntity extends IEventEmitter {
 // - - - - - - - - - - - - - - - - - - - - -
 //~ Implementation
 export class Entity extends EventEmitter implements IEntity {
-    tag = "";
-
-    private _active = true;
+    public tag: string = "";
+    private _active: boolean = true;
     private _id: number = -1;
     private _guid: string;
     private _bitset: BitSet = new BitSet();
-    private _comps = [];
+    private _comps: IComponent[] = [];
 
     get components() { return this._comps; }
     get bits() { return this._bitset; }
@@ -46,43 +44,43 @@ export class Entity extends EventEmitter implements IEntity {
     get guid() { return this._guid; }
 
     get active() { return this._active; }
-    set active(value) {
-        if (value === this._active) return;
+    set active(value: boolean) {
+        if (value === this._active) { return; }
 
         this._active = value;
-        this.emit(this.active ? 'actived' : 'deactivated', this);
+        this.emit(this.active ? "actived" : "deactivated", this);
     }
 
-    constructor() {
+    public constructor() {
         super();
         this._guid = _.uniqueId();
     }
 
-    attach(id: number, world: EntityWorld) {
-        if (this._id > -1) return;
+    public attach(id: number, world: EntityWorld) {
+        if (this._id > -1) { return; }
         return this._id = id;
     }
 
-    detach() {
-        this.emit('detached', this);
+    public detach() {
+        this.emit("detached", this);
         this.removeAllListeners();
     }
 
-    add(component) {
+    public add<T extends IComponent>(component: T) {
         let {$id} = component;
 
         this._bitset.set($id);
         this._comps[$id] = component;
 
         if (this.active) {
-            this.emit('added', this, component);
-            this.emit('changed', this);
+            this.emit("added", this, component);
+            this.emit("changed", this);
         }
 
         return this;
     }
 
-    remove<T>(component: ComponentIdentifier): T {
+    public remove<T extends IComponent>(component: ComponentIdentifier): T {
         let {$id, $name} = lookup(component);
 
         console.assert(
@@ -96,30 +94,30 @@ export class Entity extends EventEmitter implements IEntity {
         delete this._comps[$id];
 
         if (this.active) {
-            this.emit('removed', this, component, { $id, $name });
-            this.emit('changed', this);
+            this.emit("removed", this, component, { $id, $name });
+            this.emit("changed", this);
         }
 
-        return c;
+        return c as T;
     }
 
-    get<T>(comp: ComponentIdentifier): T {
-        return this._comps[(typeof comp === 'number') ? comp : lookup(comp).$id];
+    public get<T extends IComponent>(comp: ComponentIdentifier): T {
+        return (this._comps[(typeof comp === "number") ? comp : lookup(comp).$id]) as T;
     }
 
-    has(comp: ComponentIdentifier) {
-        return this._bitset.get(typeof comp === 'number' ? comp : lookup(comp).$id);
+    public has(comp: ComponentIdentifier) {
+        return this._bitset.get(typeof comp === "number" ? comp : lookup(comp).$id);
     }
 
-    reset() {
-        this.emit('destroyed', this);
+    public reset() {
+        this.emit("destroyed", this);
 
-        _.keys(this._comps)
-            .forEach((key) => delete this._comps[key])
+        _.keys(this._comps).forEach(key => delete this._comps[key]);
 
-        for (let i = 0; i < this._bitset.length(); ++i)
+        for (let i = 0; i < this._bitset.length(); ++i) {
             this._bitset.clear(i);
+        }
 
-        this.emit('changed', this);
+        this.emit("changed", this);
     }
 }
