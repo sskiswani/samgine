@@ -15,7 +15,9 @@
             true,
             "spaces"
         ],
-        "interface-name": true,
+        "interface-name": [
+            true
+        ],
         "jsdoc-format": true,
         "label-position": true,
         "label-undefined": true,
@@ -32,12 +34,7 @@
         "no-arg": true,
         "no-bitwise": false,
         "no-console": [
-            true,
-            "debug",
-            "info",
-            "time",
-            "timeEnd",
-            "trace"
+            false
         ],
         "no-consecutive-blank-lines": true,
         "no-construct": true,

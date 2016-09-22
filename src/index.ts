@@ -1,27 +1,30 @@
-import { Engine, ECS } from "core";
+import { Engine } from "core";
 
-//~ on load Callback
+// on load callback
 Engine.on("loaded", () => {
-    //~ Set up ECS
-    const world = new ECS.EntityWorld();
-    // world.registerSystem(new FooEntitySystem());
+    //~ Connect to the engine by registering callbacks
 
-    let entity = new ECS.Entity();
-    // entity.add(new BarComponent());
+    // tick is called once at the beginning of every frame
+    Engine.on("tick", fps => {
+        // tick logic here...
+    });
 
-    world.insertEntity(entity);
+    // next update is called as many times as possible within the target fps
+    Engine.on("update", deltaTime => {
+        // update logic here...
+    });
 
-    //~ Wire events together
-    Engine.on("update", (dt) => world.update(dt));
+    // render is called at the end of every frame,
+    // at an interval as close to the target fps as possible.
+    Engine.on("render", deltaTime => {
+        // render logic here...
 
-    //~ Simple PIXI renderer
-    Engine.on("render", (dt) => {
+        // optionally, let the engine handle the render step
         Engine.renderer.render(Engine.stage);
     });
 
-    //~ Do it.
+    // do it!
     Engine.begin();
-    world.initialize();
 });
 
 window.onload = () => {

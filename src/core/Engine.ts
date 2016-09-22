@@ -1,5 +1,4 @@
-import { IScreen } from "./Screen";
-import { timestamp } from "./Utils";
+import { timestamp, Reflection } from "./utils";
 import * as EventEmitter from "eventemitter3";
 import * as _ from "lodash";
 import * as PIXI from "pixi.js";
@@ -53,22 +52,13 @@ class Engine extends EventEmitter {
     private _ticking: boolean = false;
     private _lastTime: number;
 
-    private _screen: IScreen;
     private _renderer: PIXI.SystemRenderer;
     private _stage: PIXI.Container;
 
     public get isRunning() { return this._lastTime !== null && this._ticking; }
-
     public get renderer() { return this._renderer; }
     public get stage() { return this._stage; }
     public get view() { return this._renderer.view; }
-
-    public get screen() { return this._screen; }
-    public set screen(newScreen: IScreen) {
-        if (this._screen) { this._screen.dispose(); }
-        this._screen = newScreen;
-        this._screen.show();
-    }
 
     constructor() {
         super();
@@ -86,7 +76,7 @@ class Engine extends EventEmitter {
         width: 800, height: 450, rate: 1000 / 60, pixiArgs: {}
     }) {
         let pixiArgs = _.defaults(config.pixiArgs || {}, Engine.PIXIRendererOptions);
-        this.frameTime = config.rate || 1000 / 60;
+        this.frameTime = config.rate || (1000 / 60);
 
         //~ init PIXI
         this._renderer = PIXI.autoDetectRenderer(config.width || 800, config.height || 450, pixiArgs);
@@ -122,25 +112,18 @@ class Engine extends EventEmitter {
         while (this._dt > this.frameTime) {
             this._dt = this._dt - this.frameTime;
 
-            if (this._screen) { this._screen.preupdate(this.frameTime); }
             this.emit(EVENTS.PREUPDATE, this.frameTime);
-
-            if (this._screen) { this._screen.update(this.frameTime); }
             this.emit(EVENTS.UPDATE, this.frameTime);
-
-            if (this._screen) { this._screen.postupdate(this.frameTime); }
             this.emit(EVENTS.POSTUPDATE, this.frameTime);
         }
 
         //~ Render step
-        if (this._screen) { this._screen.prerender(this._dt); }
         this.emit(EVENTS.PRERENDER, this._dt);
 
         if (this.handleRendering) { this._renderer.render(this._stage); }
-        if (this._screen) { this._screen.render(this._dt); }
+
         this.emit(EVENTS.RENDER, this._dt);
 
-        if (this._screen) { this._screen.postrender(this._dt); }
         this.emit(EVENTS.POSTRENDER, this._dt);
 
         //~ Get next frame.

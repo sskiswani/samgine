@@ -6,25 +6,28 @@ A **work in progress** Typescript game-development bootstrapper (probably more u
 - `gulp` (defaults to `gulp dev`) for development, which will watch files for changes and update accordingly (manually refreshing the browser)
 - `gulp build` to get a complete build of the project in the `./bin` directory.
 
-To get a handle on the important stuff `import { Engine, ECS } from './src/core'`.
-- `ECS` (`./src/core/ecs`) is an entity-component-system that makes use of decorators (no need to manually register components before usage, a requirement of _every_ implementation that I've found thus far).
-- `Engine` (`./src/core/Engine`) provides a ['fixed timestep'](http://gafferongames.com/game-physics/fix-your-timestep/) update-render loop.
-  - `engine.on('tick', callback)` will be called at the beginning of every frame.
-  - `engine.on('update', callback)` will be called as many times as possible every frame (and at least once).
-  - `engine.on('render', callback)` will be called at the end of every frame.
+To get a handle on the important stuff `import { Engine, ECS } from 'core'`.
+- `ECS` (`core/ecs`) is a variation on the entity-component theme
+  + `ECS.Component` is a decorator that designates a class or object as a component to inject into the system.
+    * `ECS.NamedComponent` is the same thing, but accepts an argument to use as a custom name for the component.
+  + `ECS.Entity` is the uniquely identifiable collection of components
+  + `ECS.EntityManager` keeps track of entities, emits corresponding events, and (**TODO**) used to select and query for entities based on the components they have (or lack).
+- `Engine` (`core/Engine`) provides a ['fixed timestep'](http://gafferongames.com/game-physics/fix-your-timestep/) game loop.
+  + `engine.on('tick', callback)` will be called at the beginning of every frame.
+  + `engine.on('update', callback)` will be called as many times as possible every frame (and at least once).
+  + `engine.on('render', callback)` will be called at the end of every frame.
+  + `engine.eventStrings` contains the event keys, for autocomplete correctness.
 
-
-##Examples
-
-###Entities and Components
-Registering and adding components simply requires using the `ComponentMixin` decorator.
+## Examples
+### Entities and Components
+Registering and adding components simply requires using the `Component` decorator.
 
 ```js
-import {ComponentMixin} from './src/core/ecs/Component'
+import {Component} from './src/core/ecs/Component'
 
-@ComponentMixin
+@Component
 export class Position {
-    public x:number;
+    public x: number;
     public y: number;
 
     constructor(x = 0, y = 0) {
@@ -37,55 +40,43 @@ export class Position {
 Combining with entity creation and registration becomes:
 
 ```js
-import { ECS } from './src/core'
-import { Position } from './src/your_game/components'
+import { Entity, EntityManager } from "core/ecs";
 
 // Create and initialize the entity
-const entity = new ECS.Entity().add(new Position(50, 50));
+let entity = new Entity().add(new Position(50, 50));
 
-// Entities won't be managed until the world is told to do so
-world.insertEntity(entity);
+// Add the entity to the manager to allow querying for entities based on the components they have
+let manager = EntityManager.Instance;
+manager.add(entity);
+
+// Or the quick way...
+manager.add(new Entity()
+    .add(new Position(50, 50))
+    .add(new Rigidbody())
+);
+
+// Grab components using their constructor or the class name
+let log_position = pos => console.info(`Entity @ (${pos.x}, ${pos.y})`);
+log_position(entity.get(Position));
+log_position(entity.get("position"));
+
+// Strings are case-insensitive though!
+log_position(entity.get("PosiTioN"));
+
+// The NamedComponent decorator allows for custom component names (as opposed to using their class/type name)
+import { NamedComponent } from "core/ecs";
+
+@NamedComponent("pos")
+class Position {
+    public x: number;
+    public y: number;
+}
+let entity = new Entity().add(new Position());
 
 // et voila!
-console.info(`An entity at (${entity.Get(Position).x}, ${entity.Get(Position).y})`);
+log_position(entity.get("pos"));
 ```
 
-###Entity Systems
-```js
-import { EntityWorld, EntitySystem, IEntity, RequireComponents } from './src/core/ecs'
-import { Position } from './src/your_game/components'
-
-@RequireComponents(Position)
-export class MoveEntitySystem extends EntitySystem {
-    public pixelsPerSecond = 10;
-
-    constructor() {
-      super({active: true});
-    }
-
-    // Is this system interested in the entity?
-    interested(entity: IEntity) {
-      // leverage the 'aspect' created via the RequireComponents decorator
-      return this.aspect.every(componentId => entity.has(componentId));
-    }
-
-    insert(entity: IEntity) {
-      console.info(`Inserted entity with a position component!`, entity.get(Position));
-    }
-
-    remove(entity: IEntity) {
-      console.info(`Removed entity with a position component!`, entity.get(Position));
-    }
-
-    update(dt: number) {
-      let pos = entity.get(Position);
-      pos.x += pixelsPerSecond * dt;
-    }
-}
-```
-Once a system is registered, `src/core/ecs/EntityWorld` will take care of it.
-```js
-// Create and register the system to the world.
-const entityWorld = new EntityWorld();
-entityWorld.registerSystem(new MoveEntitySystem());
-```
+## TODO
+- [ ] Query for entities based on components, e.g. `manager.getEntitiesWith(Position, Graphic, Rigidbody);`.
+- [x] Get rid of the inflexible `EntityWorld` and `EntitySystem`.

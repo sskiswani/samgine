@@ -4,10 +4,10 @@ const browserSync = require('browser-sync').create();
 const del = require('del');
 const series = require('run-sequence');
 const tsify = require('tsify');
-//~
+
 const taskUtils = require('./gulp/utils');
 const bundler = require('./gulp/bundler');
-//~
+
 const config = {
     baseUrl: './src',
     outDir: './bin',

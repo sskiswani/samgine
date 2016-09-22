@@ -5,6 +5,9 @@
   "private": true,
   "author": "sskiswani",
   "devDependencies": {
+    "@types/eventemitter3": "^1.1.29",
+    "@types/lodash": "^4.14.36",
+    "@types/pixi.js": "^3.0.30",
     "browser-sync": "^2.14.0",
     "browserify": "^13.1.0",
     "del": "^2.2.1",
@@ -23,9 +26,6 @@
     "watchify": "^3.7.0"
   },
   "dependencies": {
-    "@types/eventemitter3": "^1.1.29",
-    "@types/lodash": "^4.14.36",
-    "@types/pixi.js": "^3.0.30",
     "eventemitter3": "^2.0.0",
     "lodash": "^4.14.1",
     "pixi.js": "^4.0.2"
