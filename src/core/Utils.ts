@@ -9,7 +9,7 @@ export function printDigits(x: number, numDigits = 2) {
 }
 
 export function getClassName(obj: Object | Function, lower = true): string {
-    let name = (typeof obj === "function") ? obj.name : obj.constructor.name;
+    let name = (typeof obj === "function") ? obj["name"] : obj.constructor["name"];
 
     return (lower) ? name.toLowerCase() : name;
 }

@@ -1,9 +1,8 @@
 import { IScreen } from "./Screen";
-import { PIXIRenderer } from "./Types";
 import { timestamp } from "./Utils";
-import { EventEmitter } from "eventemitter3";
-import * as PIXI from "pixi.js";
+import * as EventEmitter from "eventemitter3";
 import * as _ from "lodash";
+import * as PIXI from "pixi.js";
 
 interface InitializationConfig {
     width?: number;
@@ -55,7 +54,7 @@ class Engine extends EventEmitter {
     private _lastTime: number;
 
     private _screen: IScreen;
-    private _renderer: PIXIRenderer;
+    private _renderer: PIXI.SystemRenderer;
     private _stage: PIXI.Container;
 
     public get isRunning() { return this._lastTime !== null && this._ticking; }

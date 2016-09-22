@@ -1,10 +1,8 @@
-import * as _ from "lodash";
-import { EventEmitter } from "eventemitter3";
 import "reflect-metadata";
+import * as _ from "lodash";
 
 
-const C_NAME = Symbol("$name");
-const C_ID = Symbol("$id");
+const C_NAME = "$name";
 
 // - - - - - - - - - - - - - - - - - - - - -
 
@@ -21,13 +19,13 @@ interface IComponentMap { [$mapping: string]: IComponent; }
 // - - - - - - - - - - - - - - - - - - - - -
 
 export function ComponentMixin<T extends Function>(ctor: T): T {
-    let name: string = ctor[C_NAME];
+    let name: string = ctor["$name"] || ctor["name"];
     return NamedComponent(name)(ctor);
 }
 
 export function NamedComponent(name: string) {
     return function <T extends Function>(ctor: T): T {
-        if (!ctor[C_NAME]) { ctor[C_NAME] = name; }
+        if (!ctor["$name"]) { ctor["$name"] = name;}
         let mapping = ComponentMapper.register(ctor, name);
 
         // assign props to the component so it implements IComponent
@@ -36,7 +34,7 @@ export function NamedComponent(name: string) {
             $id: { value: mapping.$id }
         });
 
-        ctor[C_ID] = mapping.$id;
+        ctor["$id"] = mapping.$id;
 
         // return to overwrite prev ctor
         return ctor;
@@ -67,7 +65,7 @@ export class ComponentMapper {
     }
 
     public static byConstructor(lookup: Function | IComponent, safe = false): IComponent {
-        let key: string = typeof lookup === "function" ? lookup.name : lookup.$name;
+        let key: string = typeof lookup === "function" ? lookup["name"] : lookup["$name"];
 
         _assert(
             key in ComponentMapper._mapping,
@@ -117,7 +115,7 @@ export class ComponentMapper {
             return ComponentMapper._mapping[lookup];
         }
 
-        let key: string = typeof lookup === "function" ? lookup.name : lookup[C_NAME];
+        let key: string = typeof lookup === "function" ? lookup["name"] : lookup[C_NAME];
 
         _assert(
             key in ComponentMapper._mapping,
@@ -163,5 +161,6 @@ export function getMappinggetMapping(lookup: ComponentIdentifier, safe = false) 
 }
 
 export function lookup(lookup: ComponentIdentifier, safe = false): IComponent {
+    debugger;
     return ComponentMapper.lookup(lookup, safe);
 };

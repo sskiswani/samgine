@@ -1,18 +1,20 @@
-import { ECS, Engine, Utils } from "core";
+import { Engine } from "core";
 
 //~ on load Callback
 Engine.on("loaded", () => {
+    console.info("Engine all loaded!");
+
     //~ Set up ECS
-    const world = new ECS.EntityWorld();
+    // const world = new EntityWorld();
     // world.registerSystem(new FooEntitySystem());
 
-    let entity = new ECS.Entity();
+    // let entity = new Entity();
     // entity.add(new BarComponent());
 
-    world.insertEntity(entity);
+    // world.insertEntity(entity);
 
     //~ Wire events together
-    Engine.on("update", (dt) => world.update(dt));
+    // Engine.on("update", (dt) => world.update(dt));
 
     //~ Simple PIXI renderer
     Engine.on("render", (dt) => {
@@ -21,7 +23,7 @@ Engine.on("loaded", () => {
 
     //~ Do it.
     Engine.begin();
-    world.initialize();
+    // world.initialize();
 });
 
 window.onload = () => {
