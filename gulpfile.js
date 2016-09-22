@@ -9,19 +9,19 @@ const taskUtils = require('./gulp/utils');
 const bundler = require('./gulp/bundler');
 //~
 const config = {
-    rootDir: './src',
+    baseUrl: './src',
     outDir: './bin',
     bundleName: 'bundle.js',
 
     //~ assets
-    get html() { return `${this.rootDir}/**/*.html`; },
+    get html() { return `${this.baseUrl}/**/*.html`; },
 
     //~ third party
-    get pixi() { return `./node_modules/pixi.js/bin/pixi.min.js`},
+    get pixi() { return `./node_modules/pixi.js/bin/pixi.min.js` },
 
     //~ scripts
-    get scripts() { return `${this.rootDir}/**/*.ts`; },
-    get entry() { return [`${this.rootDir}/index.ts`]; },
+    get scripts() { return `${this.baseUrl}/**/*.ts`; },
+    get entry() { return [`${this.baseUrl}/index.ts`]; },
 
     get bundleDest() { return `${this.outDir}`; },
     get bundleResult() { return `${this.outDir}/${this.bundleName}`; }
@@ -51,8 +51,8 @@ const bundleArgs = {
 var scriptBundle = bundler.createWatcher(
     bundler.createBundler({
         entries: config.entry,
-        paths: [config.rootDir],
-        extensions: ['.tsx', '.ts', '.js'],
+        paths: [config.baseUrl],
+        extensions: ['.ts', '.js'],
         debug: true,
         insertGlobals: true,
         fullPaths: true

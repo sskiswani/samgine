@@ -1,28 +1,27 @@
 {
 	"compilerOptions": {
-		"baseUrl": "./src/app/",
-		"outDir": "./bin/",
-		"sourceMap": true,
-		"noImplicitAny": false,
 		"allowJs": false,
-		"module": "commonjs",
-		"moduleResolution": "node",
-		"target": "es5",
-		"jsx": "react",
-		"removeComments": true,
-		"preserveConstEnums": true,
-		"experimentalDecorators": true,
+		"allowSyntheticDefaultImports": true,
+		"baseUrl": "src",
 		"emitDecoratorMetadata": true,
-		"noEmitOnError": true
+		"experimentalDecorators": true,
+		"module": "es6",
+		"moduleResolution": "node",
+		"noEmitOnError": true,
+		"noImplicitAny": false,
+		"outDir": "bin/ts",
+		"preserveConstEnums": true,
+		"removeComments": true,
+		"sourceMap": true,
+		"target": "es6"
 	},
 	"include": [
-		"./typings/index.d.ts",
-		"./src/index.ts",
-		"./src/**.ts"
+		"node_modules/@types/**/*.ts",
+		"src/index.ts",
+		"src/**.ts"
 	],
 	"exclude": [
 		"bin",
-		"node_modules",
-		"**/*.spec.ts"
+		"node_modules"
 	]
 }
