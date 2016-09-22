@@ -23,7 +23,7 @@ To get a handle on the important stuff `import { Engine, ECS } from 'core'`.
 Registering and adding components simply requires using the `Component` decorator.
 
 ```js
-import {Component} from './src/core/ecs/Component'
+import {Component} from "core/ecs/Component";
 
 @Component
 export class Position {
