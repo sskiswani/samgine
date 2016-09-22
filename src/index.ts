@@ -1,7 +1,7 @@
-import { ECS, Engine, Utils } from './core'
+import { ECS, Engine, Utils } from "core";
 
 //~ on load Callback
-Engine.on('loaded', () => {
+Engine.on("loaded", () => {
     //~ Set up ECS
     const world = new ECS.EntityWorld();
     // world.registerSystem(new FooEntitySystem());
@@ -12,10 +12,10 @@ Engine.on('loaded', () => {
     world.insertEntity(entity);
 
     //~ Wire events together
-    Engine.on('update', (dt) => world.update(dt));
+    Engine.on("update", (dt) => world.update(dt));
 
     //~ Simple PIXI renderer
-    Engine.on('render', (dt) => {
+    Engine.on("render", (dt) => {
         Engine.renderer.render(Engine.stage);
     });
 
@@ -26,6 +26,6 @@ Engine.on('loaded', () => {
 
 window.onload = () => {
     Engine.init({ pixiArgs: { antialias: true } });
-    Engine.load('assets/img/spritesheet.json');
-    document.getElementById('game').appendChild(Engine.view);
+    Engine.load("assets/img/spritesheet.json");
+    document.getElementById("game").appendChild(Engine.view);
 };

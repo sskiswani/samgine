@@ -4,10 +4,6 @@
   "description": "some new project",
   "private": true,
   "author": "sskiswani",
-  "main": "server.js",
-  "scripts": {
-    "postinstall": "typings install"
-  },
   "devDependencies": {
     "browser-sync": "^2.14.0",
     "browserify": "^13.1.0",

@@ -1,6 +1,10 @@
-import * as _ from 'lodash'
-import * as EventEmitter from 'eventemitter3'
-import "reflect-metadata"
+import * as _ from "lodash";
+import { EventEmitter } from "eventemitter3";
+import "reflect-metadata";
+
+
+const C_NAME = Symbol("$name");
+const C_ID = Symbol("$id");
 
 // - - - - - - - - - - - - - - - - - - - - -
 
@@ -11,24 +15,19 @@ export interface IComponent {
     $id: number;
 }
 
-interface ComponentMapping extends IComponent {
-    ctor: Function;
-}
-
-interface ComponentMap {
-    [$mapping: string]: IComponent;
-}
+interface IComponentMapping extends IComponent { ctor: Function; }
+interface IComponentMap { [$mapping: string]: IComponent; }
 
 // - - - - - - - - - - - - - - - - - - - - -
 
 export function ComponentMixin<T extends Function>(ctor: T): T {
-    let name: string = ctor['$name'] || ctor['name'];
+    let name: string = ctor[C_NAME];
     return NamedComponent(name)(ctor);
 }
 
 export function NamedComponent(name: string) {
     return function <T extends Function>(ctor: T): T {
-        if (!ctor['$name']) ctor['$name'] = name;
+        if (!ctor[C_NAME]) { ctor[C_NAME] = name; }
         let mapping = ComponentMapper.register(ctor, name);
 
         // assign props to the component so it implements IComponent
@@ -37,42 +36,41 @@ export function NamedComponent(name: string) {
             $id: { value: mapping.$id }
         });
 
-        ctor['$id'] = mapping.$id;
+        ctor[C_ID] = mapping.$id;
 
         // return to overwrite prev ctor
         return ctor;
-    }
+    };
 }
 
 // - - - - - - - - - - - - - - - - - - - - -
 
-function _assert(test?: boolean, message?: string, force = false, ...optionalParams: any[]) {
-    if (!(force || ComponentMapper.assertions)) return;
+function _assert(
+    test?: boolean, message?: string, force = false, ...optionalParams: Object[]) {
+    if (!(force || ComponentMapper.assertions)) { return; }
     console.assert(test, message, optionalParams);
 }
-
-//~ util functions
-const isComponent = (thing) => ('$name' in thing || '$id' in thing);
-const castToName = (thing: Function | IComponent) => thing['$name'] || thing['name'];
 
 export class ComponentMapper {
     //~ toggles
     public static assertions = true;
 
     //~ management
-    private static _mapping: ComponentMap = {};
+    private static _mapping: IComponentMap = {};
     private static _nextId: number = 0;
 
-    static byId(id: number, safe = false) {
+    public static byId(id: number, safe = false) {
         let mapping = _.find(ComponentMapper._mapping, obj => obj.$id === id);
-        _assert(mapping !== undefined, "couldnt find id in mapping", safe, id, this);
+        _assert(
+            mapping !== undefined, "couldnt find id in mapping", safe, id, this);
         return mapping;
     }
 
-    static byConstructor(lookup: Function | IComponent, safe = false): IComponent {
-        let key: string = lookup['$name'] || lookup['name'];
+    public static byConstructor(lookup: Function | IComponent, safe = false): IComponent {
+        let key: string = typeof lookup === "function" ? lookup.name : lookup.$name;
 
-        _assert(key in ComponentMapper._mapping,
+        _assert(
+            key in ComponentMapper._mapping,
             `IComponent named ${key} not found!`,
             safe, { lookup, mapper: this }
         );
@@ -80,11 +78,11 @@ export class ComponentMapper {
         return ComponentMapper._mapping[key];
     }
 
-    static getId(lookup: ComponentIdentifier, safe = false): number {
+    public static getId(lookup: ComponentIdentifier, safe = false): number {
         return ComponentMapper.getMapping(lookup, safe).$id;
     }
 
-    static lookup(lookup: ComponentIdentifier, safe = false): IComponent {
+    public static lookup(lookup: ComponentIdentifier, safe = false): IComponent {
         let { $id, $name } = ComponentMapper.getMapping(lookup, safe);
         return { $id, $name };
     }
@@ -97,19 +95,21 @@ export class ComponentMapper {
      * @param {boolean} [safe=false] (description)
      * @returns (description)
      */
-    static getMapping(lookup: ComponentIdentifier, safe = false) {
-        if (typeof lookup === 'number') {
+    public static getMapping(lookup: ComponentIdentifier, safe = false) {
+        if (typeof lookup === "number") {
             let mapping = _.find(ComponentMapper._mapping, obj => obj.$id === lookup);
 
-            _assert(mapping !== undefined,
+            _assert(
+                mapping !== undefined,
                 `couldnt find id ${lookup} in mapping`,
                 safe, { lookup, mapper: this }
             );
 
             return mapping;
-        } else if (typeof lookup === 'string') {
+        } else if (typeof lookup === "string") {
 
-            _assert(lookup in ComponentMapper._mapping,
+            _assert(
+                lookup in ComponentMapper._mapping,
                 `Couldn't find name ${lookup} in mapping`,
                 safe, { lookup, mapper: this }
             );
@@ -117,9 +117,10 @@ export class ComponentMapper {
             return ComponentMapper._mapping[lookup];
         }
 
-        let key: string = lookup['$name'] || lookup['name'];
+        let key: string = typeof lookup === "function" ? lookup.name : lookup[C_NAME];
 
-        _assert(key in ComponentMapper._mapping,
+        _assert(
+            key in ComponentMapper._mapping,
             `IComponent named ${key} not found!`,
             safe, { lookup, mapper: this }
         );
@@ -134,8 +135,8 @@ export class ComponentMapper {
      * @param {Function} ctor (description)
      * @returns (description)
      */
-    static register(ctor: Function, preferredName?: string, safe = true) {
-        let lookupKey: string = preferredName || (ctor['$name'] || ctor['name']);
+    public static register(ctor: Function, preferredName?: string, safe = true) {
+        let lookupKey: string = preferredName || (ctor[C_NAME] || ctor["name"]);
 
         _assert(
             (lookupKey in ComponentMapper._mapping) === false,
@@ -144,7 +145,6 @@ export class ComponentMapper {
         );
 
         Object.freeze(ComponentMapper._mapping[lookupKey] = {
-            // ctor: ctor,
             $id: ComponentMapper._nextId++,
             $name: lookupKey
         });

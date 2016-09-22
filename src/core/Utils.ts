@@ -5,57 +5,20 @@ export function timestamp() {
 }
 
 export function printDigits(x: number, numDigits = 2) {
-    return x.toLocaleString('en-US', { minimumIntegerDigits: numDigits, useGrouping: false });
+    return x.toLocaleString("en-US", { minimumIntegerDigits: numDigits, useGrouping: false });
 }
 
-export function getClassName(obj: any, lower = true): string {
-    let name = (typeof obj === 'function')
-        ? obj['name']
-        : obj.constructor['name'];
-
-    // TODO: Testing my faith
-    console.assert(!!name || typeof name === 'string' || name !== "",
-        "Shieeet getting class name is aids", name, obj);
+export function getClassName(obj: Object | Function, lower = true): string {
+    let name = (typeof obj === "function") ? obj.name : obj.constructor.name;
 
     return (lower) ? name.toLowerCase() : name;
 }
 
-export function forceArray<T>(val: T | Array<T>): Array<T> {
+export function forceArray<T>(val: T | T[]): T[] {
     return (val instanceof Array) ? val : [val];
 }
 
-export function proxy(originalObj, originalProp, targetObj, targetProp) {
-    Object.defineProperty(originalObj, originalProp, {
-        get: () => targetObj[targetProp],
-        set: function (newValue) {
-            targetObj[targetProp] = newValue;
-        }
-    });
-}
-
-export function readOnlyProxy(originalObj, originalProp, targetObj, targetProp) {
-    Object.defineProperty(originalObj, originalProp, {
-        get: () => targetObj[targetProp],
-        set: (newValue) => {
-            console.error(targetProp + ' is read-only.');
-            throw new Error('ReadOnly');
-        }
-    });
-}
-
-export function watch(obj, prop, callback: Function, callbackArgs?: any) {
-    var value = obj[prop];
-
-    Object.defineProperty(obj, prop, {
-        get: () => value,
-        set: (newValue) => {
-            value = newValue;
-            callback(newValue, callbackArgs);
-        }
-    });
-}
-
-export const Key = {
+export const KEYS = {
     "SPACEBAR": 32,
     "LEFT": 37,
     "UP": 38,

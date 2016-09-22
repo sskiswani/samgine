@@ -1,18 +1,37 @@
-import * as EventEmitter from 'eventemitter3'
-import * as _ from 'lodash'
-import { IScreen } from './Screen'
-import { PIXIRenderer } from './Types'
-import { timestamp } from './Utils'
+import { IScreen } from "./Screen";
+import { PIXIRenderer } from "./Types";
+import { timestamp } from "./Utils";
+import { EventEmitter } from "eventemitter3";
+import * as PIXI from "pixi.js";
+import * as _ from "lodash";
 
 interface InitializationConfig {
     width?: number;
     height?: number;
     rate?: number;
-    pixiArgs?: PIXI.RendererOptions
+    pixiArgs?: PIXI.RendererOptions;
 }
 
+const EVENTS = {
+    INITIALIZED: "initialized",
+    PREUPDATE: "preupdate",
+    UPDATE: "update",
+    TICK: "tick",
+    POSTUPDATE: "postupdate",
+    PRERENDER: "prerender",
+    RENDER: "render",
+    POSTRENDER: "postrender",
+    LOADED: "loaded"
+};
+
 class Engine extends EventEmitter {
-    static get PIXIRendererOptions(): PIXI.RendererOptions {
+    public static eventStrings: Object = EVENTS;
+
+    private static _instance: Engine;
+
+    public static get instance() { return Engine._instance; }
+
+    public static get PIXIRendererOptions(): PIXI.RendererOptions {
         return {
             backgroundColor: 0x1099bb,
             antialias: true,
@@ -24,12 +43,12 @@ class Engine extends EventEmitter {
     /**
      * Whether or not the Engine should call render on the renderer.
      */
-    handleRendering: boolean = false;
+    public handleRendering: boolean = false;
 
     /**
      * Time spent in the update loop
      */
-    frameTime: number;
+    public frameTime: number;
 
     private _dt: number = 0;
     private _ticking: boolean = false;
@@ -38,6 +57,19 @@ class Engine extends EventEmitter {
     private _screen: IScreen;
     private _renderer: PIXIRenderer;
     private _stage: PIXI.Container;
+
+    public get isRunning() { return this._lastTime !== null && this._ticking; }
+
+    public get renderer() { return this._renderer; }
+    public get stage() { return this._stage; }
+    public get view() { return this._renderer.view; }
+
+    public get screen() { return this._screen; }
+    public set screen(newScreen: IScreen) {
+        if (this._screen) { this._screen.dispose(); }
+        this._screen = newScreen;
+        this._screen.show();
+    }
 
     constructor() {
         super();
@@ -51,7 +83,7 @@ class Engine extends EventEmitter {
     /**
      * Initialize the engine.
      */
-    init(config: InitializationConfig = {
+    public init(config: InitializationConfig = {
         width: 800, height: 450, rate: 1000 / 60, pixiArgs: {}
     }) {
         let pixiArgs = _.defaults(config.pixiArgs || {}, Engine.PIXIRendererOptions);
@@ -62,88 +94,66 @@ class Engine extends EventEmitter {
         this._stage = new PIXI.Container();
         this._stage.interactive = true;
 
-        // console.info('Engine initialized!', this);
-        this.emit('init');
+        this.emit(EVENTS.INITIALIZED);
     }
 
     /**
      * Begin ticking.
      */
-    begin() {
+    public begin() {
         this._lastTime = performance.now();
-        if (!this._ticking) this.tick();
+        if (!this._ticking) { this.tick(); }
     }
 
     /**
      * Core loop of the Engine.
      */
-    tick() {
-        if (!this._ticking) this._ticking = true;
+    public tick() {
+        if (!this._ticking) { this._ticking = true; }
         window.requestAnimationFrame(() => this.tick());
 
         //~ Update timing
         this._dt = this._dt + Math.min(1, (timestamp() - this._lastTime) / 1000);
 
-        this.emit('tick', this._dt);
+        this.emit(EVENTS.TICK, this._dt);
 
-        if (this._lastTime === null) return;
+        if (this._lastTime === null) { return; }
 
         //~ Update step.
         while (this._dt > this.frameTime) {
             this._dt = this._dt - this.frameTime;
 
-            if (this._screen) this._screen.preupdate(this.frameTime);
-            this.emit('preupdate', this.frameTime);
+            if (this._screen) { this._screen.preupdate(this.frameTime); }
+            this.emit(EVENTS.PREUPDATE, this.frameTime);
 
-            if (this._screen) this._screen.update(this.frameTime);
-            this.emit('update', this.frameTime);
+            if (this._screen) { this._screen.update(this.frameTime); }
+            this.emit(EVENTS.UPDATE, this.frameTime);
 
-            if (this._screen) this._screen.postupdate(this.frameTime);
-            this.emit('postupdate', this.frameTime);
+            if (this._screen) { this._screen.postupdate(this.frameTime); }
+            this.emit(EVENTS.POSTUPDATE, this.frameTime);
         }
 
         //~ Render step
-        if (this._screen) this._screen.prerender(this._dt);
-        this.emit('prerender', this._dt);
+        if (this._screen) { this._screen.prerender(this._dt); }
+        this.emit(EVENTS.PRERENDER, this._dt);
 
-        if (this.handleRendering) this._renderer.render(this._stage);
-        if (this._screen) this._screen.render(this._dt);
-        this.emit('render', this._dt);
+        if (this.handleRendering) { this._renderer.render(this._stage); }
+        if (this._screen) { this._screen.render(this._dt); }
+        this.emit(EVENTS.RENDER, this._dt);
 
-        if (this._screen) this._screen.postrender(this._dt);
-        this.emit('postrender', this._dt);
+        if (this._screen) { this._screen.postrender(this._dt); }
+        this.emit(EVENTS.POSTRENDER, this._dt);
 
         //~ Get next frame.
         this._lastTime = timestamp();
     }
 
-    load(...assets: string[]) {
+    public load(...assets: string[]) {
         const loader = new PIXI.loaders.Loader();
         _.each(assets, asset => loader.add(asset, asset));
-        loader.once('complete', () => this.emit('loaded'));
+        loader.once("complete", () => this.emit(EVENTS.LOADED));
         loader.load();
     }
-
-    get renderer() { return this._renderer; }
-    get stage() { return this._stage; }
-    get view() { return this._renderer.view; }
-
-    get screen() {
-        return this._screen;
-    }
-
-    set screen(newScreen: IScreen) {
-        if (this._screen) this._screen.dispose();
-        this._screen = newScreen;
-        this._screen.show();
-    }
-
-    get isRunning() {
-        return this._lastTime !== null && this._ticking;
-    }
-
-    private static _instance: Engine;
-    get instance() { return Engine._instance; }
 }
 
 const _engineInstance = new Engine();

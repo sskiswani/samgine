@@ -1,5 +1,4 @@
-import * as EventEmitter from 'eventemitter3';
-import Engine from './Engine';
+import { EventEmitter } from "eventemitter3";
 
 export interface IScreen {
     show();
@@ -11,17 +10,4 @@ export interface IScreen {
     prerender(dt: number);
     render(dt: number);
     postrender(dt: number);
-}
-
-export class Screen extends EventEmitter {
-    constructor() {
-        super();
-    }
-
-    preupdate(dt: number) { }
-    update(dt: number) { }
-    postupdate(dt: number) { }
-    prerender(dt: number) { }
-    render(dt: number) { }
-    postrender(dt: number) { }
 }
