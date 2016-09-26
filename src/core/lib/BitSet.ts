@@ -28,13 +28,17 @@ export default class BitSet {
         return (this.store[this.wordIndex(pos)] & (1 << pos)) !== 0;
     }
 
+    public isEmpty() {
+        return this.length() === 0;
+    }
+
     public length() {
         if (this.wordLength() === 0) { return 0; }
         return this.bitsPerWord * (this.wordLength() - 1) + (this.store[this.wordLength() - 1].toString(2).length);
     }
 
     public wordLength(): number {
-        let length, pos, _i, _ref;
+        let length: number, pos: number, _i: number, _ref: number;
         length = this.store.length;
 
         for (pos = _i = _ref = this.store.length - 1;

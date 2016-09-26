@@ -20,7 +20,7 @@ export class EntityManager extends EventEmitter {
 
     //"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-    private constructor(name?: string) {
+    private constructor() {
         super();
 
         if (defaultManager == null) { defaultManager = this; }
@@ -30,9 +30,7 @@ export class EntityManager extends EventEmitter {
     //~ Entity CRUD
     //"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-    /**
-     * Add an entity to be managed.
-     */
+    /** Add an entity to be managed. */
     public add(entity: Entity): number {
         let {id, tag} = entity;
 
@@ -47,10 +45,12 @@ export class EntityManager extends EventEmitter {
         return id;
     }
 
+    /** Add multiple entities to be managed. */
     public addAll(...entities: Entity[]): void {
         entities.forEach(e => this.add(e));
     }
 
+    /** Remove a managed entity. */
     public remove(entity: string | number | Entity): Entity {
         let id: number, tag: string;
 
@@ -75,6 +75,7 @@ export class EntityManager extends EventEmitter {
         return entity;
     }
 
+    /** Remove multiple entities */
     public removeAll(...entities: Array<string | number | Entity>): Entity[] {
         return entities.map(e => this.remove(e));
     }
