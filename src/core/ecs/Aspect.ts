@@ -1,9 +1,8 @@
-import { IComponent } from "./";
-import { Entity } from "./Entity";
 import { BitSet } from "../lib";
-import * as EventEmitter from "eventemitter3";
+import { IComponent } from "./Component";
+import { Entity } from "./Entity";
 
-export class Aspect{
+export class Aspect {
     private _all: BitSet = new BitSet();
     private _none: BitSet = new BitSet();
     private _one: BitSet = new BitSet();

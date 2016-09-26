@@ -1,7 +1,7 @@
 import { BitSet } from "../lib";
-import { EntityManager } from "./EntityManager";
 import { ComponentIdentifier, getMapping, IComponent } from "./Component";
 import * as ECSEvents from "./ECSEvents";
+import { EntityManager } from "./EntityManager";
 import * as EventEmitter from "eventemitter3";
 import * as _ from "lodash";
 
