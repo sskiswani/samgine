@@ -6,11 +6,7 @@ import * as EventEmitter from "eventemitter3";
 export class EntityManager extends EventEmitter {
     private static _instance = new EntityManager();
 
-    public static get Instance(): EntityManager {
-        return EntityManager._instance;
-    }
-
-    //"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    public static get Instance(): EntityManager { return EntityManager._instance; }
 
     private _entities: IIndex<Entity> = {};
     private _tags: IDictionary<number> = {};
@@ -21,13 +17,10 @@ export class EntityManager extends EventEmitter {
 
     private constructor() {
         super();
-
-        if (EntityManager._instance == null) { EntityManager._instance = this; }
+        if (EntityManager._instance === null) {
+            EntityManager._instance = this;
+        }
     }
-
-    //"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    //~ Entity CRUD
-    //"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
     /** Add an entity to be managed. */
     public add(entity: Entity): number {

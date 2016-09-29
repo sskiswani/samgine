@@ -53,17 +53,18 @@ export class Entity extends EventEmitter {
     /**
      * Add a component to this Entity.
      */
-    public add(component) {
-        let $id = component["$id"];
+    public add(...components: any[]) {
+        components.forEach(component => {
+            let $id = component["$id"];
 
-        this._bitset.set($id);
-        this._comps[$id] = component;
+            this._bitset.set($id);
+            this._comps[$id] = component;
 
-        if (this._active) {
-            this.emit(ECSEvents.COMPONENT_ADDED, this, component);
-            this.emit(ECSEvents.ENTITY_CHANGED, this);
-        }
-
+            if (this._active) {
+                this.emit(ECSEvents.COMPONENT_ADDED, this, component);
+                this.emit(ECSEvents.ENTITY_CHANGED, this);
+            }
+        });
         return this;
     }
 

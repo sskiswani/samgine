@@ -5,86 +5,37 @@ import { Transform, Other, Test } from "./components";
 const manager = EntityManager.Instance;
 
 let entity = new Entity();
-entity.tag = "first entity";
 let other = new Entity();
+entity.tag = "first entity";
 other.tag = "other entity";
 
 let output = document.querySelector("#log");
-
 manager.addAll(entity, other);
 
-let compNames = (ent: Entity) => `<span style="font-family:monospace; font-size:initial;">
-    [ ${ent.components.map(c => c ? c.$name : "{null}").join(", ")} ]
-</span>`;
+entity.add(new Transform(), new Other());
+other.add(new Other());
 
-const makeElement = (el, opts: { html?: string, text?: string, cls?: string }) => {
-    let node = document.createElement(el);
-    if (opts.cls) { node.className = opts.cls; }
-    if (opts.text) { node.innerText = opts.text; }
-    if (opts.html) { node.innerHTML += opts.html; }
-    return node;
-};
+let fam = Aspect.from(["Transform", "Other"], ["Test"]);
+console.assert(fam.check(entity), "entity");
+console.assert(!fam.check(other), "other");
 
-const error = (ent: Entity, aspect: Aspect, text?: string, html?: string) => {
+fam = Aspect.from(["Other"], [], ["Transform"]);
+console.assert(fam.check(entity), `entity: [ ${entity.components.map(c => c.$name).join(", ")} ] vs: ${fam}`);
+console.assert(!fam.check(other), `other: [ ${other.components.map(c => c.$name).join(", ")} ] vs: ${fam}`);
 
-    output.appendChild(makeElement("dt", {
-        text: `${text || ent.tag}`,
-        html: html,
-        cls: "error"
-    }));
+other.add(new Test());
+fam = Aspect.from([], [Test], ["OTHER", "Transform"]);
+console.assert(fam.check(entity), `entity: [ ${entity.components.map(c => c.$name).join(", ")} ] vs: ${fam}`);
+console.assert(!fam.check(other), `other: [ ${other.components.map(c => c.$name).join(", ")} ] vs: ${fam}`);
 
-    output.appendChild(makeElement("dd", {
-        html: `Entity: ${compNames(ent)} ${aspect.toString(ent)}`
-    }));
-};
+fam = Aspect.from([Other], [], [Test]);
+console.assert(!fam.check(entity), `entity: [ ${entity.components.map(c => c.$name).join(", ")} ] vs: ${fam}`);
+console.assert(fam.check(other), `other: [ ${other.components.map(c => c.$name).join(", ")} ] vs: ${fam}`);
 
-const success = (ent: Entity, aspect: Aspect, text?: string, html?: string) => {
-    output.appendChild(makeElement("dt", {
-        text: `${text || ent.tag}`,
-        html: `${html || "k"}`,
-        cls: "success"
-    }));
+fam = Aspect.from([Transform, Other], [Test]);
+fam = Aspect.from([Transform, Other], [Test]);
+fam = Aspect.from([Transform, Other], [Test]);
 
-    output.appendChild(makeElement("dd", {
-        html: `Entity: ${compNames(ent)} ${aspect.toString(ent)}`
-    }));
-}
-
-let TEST = (ent: Entity, aspect: Aspect, expect: boolean) => {
-    let msg = `<span style='padding-left:10px; color:#CCC;'>
-        expected [ ${expect} ] got [ ${aspect.check(ent)} ]</span>`;
-
-    if (expect === aspect.check(ent)) {
-        success(ent, aspect, "SUCCESS", msg);
-    } else {
-        error(ent, aspect, "ERROR:", msg);
-    }
-}
-
-
-let fam = new Aspect([Transform, Other], [Test]);
-entity.add(new Transform());
-TEST(entity, fam, false);
-
-entity.add(new Other());
-TEST(entity, fam, true);
-
-entity.add(new Test());
-TEST(entity, fam, false);
-
-fam = new Aspect([], [Test], [Other, Transform]);
-
-entity.remove(Test);
-TEST(entity, fam, true);
-
-entity.remove(Other);
-TEST(entity, fam, true);
-
-entity.remove(Transform);
-TEST(entity, fam, false);
-
-
-manager.add(entity);
 
 // on load callback
 Engine.on("loaded", () => {

@@ -1,6 +1,5 @@
 import { Aspect } from "core/ecs";
 
-const RenderAspect = new Aspect("Transform");
 
 export class TestSystem {
     private _view: PIXI.Container;
