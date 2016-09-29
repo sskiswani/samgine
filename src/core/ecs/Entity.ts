@@ -1,4 +1,3 @@
-import { BitSet } from "../lib";
 import { ComponentIdentifier, getMapping, IComponent } from "./Component";
 import * as ECSEvents from "./ECSEvents";
 import { EntityManager } from "./EntityManager";
@@ -13,8 +12,6 @@ export class Entity extends EventEmitter {
     private _guid: string;
     private _id: number;
     private _tag: string;
-
-    private _bitset: BitSet = new BitSet();
     private _comps: IComponent[] = [];
 
     private _active: boolean = true;
@@ -31,7 +28,6 @@ export class Entity extends EventEmitter {
         this._tag = value;
     }
 
-    get bits() { return this._bitset; }
     get components() { return this._comps; }
 
     get active() { return this._active; }
@@ -57,7 +53,6 @@ export class Entity extends EventEmitter {
         components.forEach(component => {
             let $id = component["$id"];
 
-            this._bitset.set($id);
             this._comps[$id] = component;
 
             if (this._active) {
@@ -74,14 +69,7 @@ export class Entity extends EventEmitter {
     public remove<T extends IComponent>(component: ComponentIdentifier): T {
         let {$name, $id} = getMapping(component);
 
-        console.assert(
-            $id in this._comps === this._bitset.get($id),
-            `Entity bits and components not synchronized!`,
-            this
-        );
-
         let c = this._comps[$id];
-        this._bitset.clear($id);
         delete this._comps[$id];
 
         if (this.active) {
@@ -105,9 +93,9 @@ export class Entity extends EventEmitter {
      * Check if an entity has the specified component.
      */
     public has(comp: ComponentIdentifier) {
-        if (comp["$id"]) { return this._bitset.get(comp["$id"]); }
-        if (typeof comp === "number") { return this._bitset.get(comp); }
-        return this._bitset.get(getMapping(comp).$id);
+        if (comp["$id"]) { return comp["$id"] in this._comps; }
+        if (typeof comp === "number") { return comp in this._comps; }
+        return getMapping(comp).$id in this._comps;
     }
 
     /**
@@ -115,12 +103,6 @@ export class Entity extends EventEmitter {
      */
     public dispose() {
         Object.keys(this._comps).forEach(key => delete this._comps[key]);
-
-        for (let i = 0; i < this._bitset.length(); ++i) {
-            this._bitset.clear(i);
-        }
-
-        this.emit(ECSEvents.ENTITY_CHANGED, this);
         this.active = false;
         this.emit(ECSEvents.ENTITY_DISPOSED, this);
     }
