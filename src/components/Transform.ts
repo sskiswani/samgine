@@ -6,3 +6,9 @@ export class Transform {
     public scale = { x: 0, y: 0 };
     public rotation = 0;
 }
+
+export const TEST: Transform = {
+    position: { x: 0, y: 0 },
+    scale: { x: 0, y: 0 },
+    rotation: 0
+};
