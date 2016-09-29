@@ -24,7 +24,7 @@ To get a handle on the important stuff `import { Engine, ECS } from 'core'`.
 Registering and adding components simply requires using the `Component` decorator.
 
 ```js
-import {Component} from "core/ecs/Component";
+import {Component} from "core/ecs";
 
 @Component
 export class Position {
@@ -72,7 +72,7 @@ import { Entity, EntityManager } from "core/ecs";
 // Create and initialize the entity
 let entity = new Entity().add(new Position(50, 50));
 
-// Add the entity to the manager to allow querying for entities based on the components they have
+// The manager will emit events as entities are modified and is their home.
 let manager = EntityManager.Instance;
 manager.add(entity);
 
@@ -90,10 +90,13 @@ let allOf = [Position];
 let noneOf = ["rigidbody"];
 let oneOf = ["sprite", "graphic", "image"];
 
-// Create the aspect with the args (aspects are cached, so they are unique to their arguments).
+// Aspects use these three criteria to match entities.
 let aspect = Aspect.from(allOf, noneOf, oneOf);
 
-// Filter the entities from the manager
+// Aspects are cached based on their criteria, so this wont create a new Aspect
+const aspectCopy = Aspect.from(allOf, noneOf, oneOf);
+
+// The purpose of an aspect is to provide easy filtering
 let manager = EntityManager.Instance;
 let family = manager.entities.filter(entity => aspect.check(entity));
 
