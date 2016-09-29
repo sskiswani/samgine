@@ -8,6 +8,9 @@ const watchify = require('watchify');
 const taskUtils = require('./utils');
 const chalk = gutil.colors;
 
+const DIR = chalk.bold.cyan;
+const completed_msg = chalk.bold.green("COMPLETED");
+
 function rebundle(options) {
     let {bundleName, outDir, debug} = _.defaults(options, {
         outDir: './bin',
@@ -16,7 +19,7 @@ function rebundle(options) {
     });
 
     if (debug) {
-        gutil.log(`\t-> Starting rebundle... (${chalk.bold.cyan(`${outDir}/${bundleName}`)})`);
+        gutil.log(`\t-> [START] Rebundling ${DIR(`${outDir}/${bundleName}`)}.`);
     }
 
     const stream = this.bundle()
@@ -25,10 +28,10 @@ function rebundle(options) {
         .pipe(source(bundleName))
         .pipe(gulp.dest(outDir));
 
-    if (!debug) return stream;
+    if (!debug) { return stream; }
 
     return stream.once('end', () => {
-        gutil.log(`\t-> Rebundle of ${chalk.bold.cyan(`${outDir}/${bundleName}`)} completed.`);
+        gutil.log(`\t-> [${completed_msg}] Rebundling ${DIR(`${outDir}/${bundleName}`)}`);
     });
 }
 

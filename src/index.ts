@@ -1,34 +1,111 @@
 import { Engine } from "core";
+import { EntityManager, Entity, Aspect } from "core/ecs";
+import { Transform, Other, Test } from "./components";
+
+const manager = EntityManager.Instance;
+
+let entity = new Entity();
+entity.tag = "first entity";
+let other = new Entity();
+other.tag = "other entity";
+
+let output = document.querySelector("#log");
+
+manager.addAll(entity, other);
+
+let compNames = (ent: Entity) => `<span style="font-family:monospace; font-size:initial;">
+    [ ${ent.components.map(c => c ? c.$name : "{null}").join(", ")} ]
+</span>`;
+
+const makeElement = (el, opts: { html?: string, text?: string, cls?: string }) => {
+    let node = document.createElement(el);
+    if (opts.cls) { node.className = opts.cls; }
+    if (opts.text) { node.innerText = opts.text; }
+    if (opts.html) { node.innerHTML += opts.html; }
+    return node;
+};
+
+const error = (ent: Entity, aspect: Aspect, text?: string, html?: string) => {
+
+    output.appendChild(makeElement("dt", {
+        text: `${text || ent.tag}`,
+        html: html,
+        cls: "error"
+    }));
+
+    output.appendChild(makeElement("dd", {
+        html: `Entity: ${compNames(ent)} ${aspect.toString(ent)}`
+    }));
+};
+
+const success = (ent: Entity, aspect: Aspect, text?: string, html?: string) => {
+    output.appendChild(makeElement("dt", {
+        text: `${text || ent.tag}`,
+        html: `${html || "k"}`,
+        cls: "success"
+    }));
+
+    output.appendChild(makeElement("dd", {
+        html: `Entity: ${compNames(ent)} ${aspect.toString(ent)}`
+    }));
+}
+
+let TEST = (ent: Entity, aspect: Aspect, expect: boolean) => {
+    let msg = `<span style='padding-left:10px; color:#CCC;'>
+        expected [ ${expect} ] got [ ${aspect.check(ent)} ]</span>`;
+
+    if (expect === aspect.check(ent)) {
+        success(ent, aspect, "SUCCESS", msg);
+    } else {
+        error(ent, aspect, "ERROR:", msg);
+    }
+}
+
+
+let fam = new Aspect([Transform, Other], [Test]);
+entity.add(new Transform());
+TEST(entity, fam, false);
+
+entity.add(new Other());
+TEST(entity, fam, true);
+
+entity.add(new Test());
+TEST(entity, fam, false);
+
+fam = new Aspect([], [Test], [Other, Transform]);
+
+entity.remove(Test);
+TEST(entity, fam, true);
+
+entity.remove(Other);
+TEST(entity, fam, true);
+
+entity.remove(Transform);
+TEST(entity, fam, false);
+
+
+manager.add(entity);
 
 // on load callback
 Engine.on("loaded", () => {
-    //~ Connect to the engine by registering callbacks
 
-    // tick is called once at the beginning of every frame
     Engine.on("tick", fps => {
-        // tick logic here...
+        // TODO
     });
 
-    // next update is called as many times as possible within the target fps
     Engine.on("update", deltaTime => {
-        // update logic here...
+        // TODO
     });
 
-    // render is called at the end of every frame,
-    // at an interval as close to the target fps as possible.
     Engine.on("render", deltaTime => {
-        // render logic here...
-
-        // optionally, let the engine handle the render step
         Engine.renderer.render(Engine.stage);
     });
 
-    // do it!
     Engine.begin();
 });
 
 window.onload = () => {
-    Engine.init({ pixiArgs: { antialias: true } });
-    Engine.load("assets/img/spritesheet.json");
+    Engine.init({ pixiArgs: { antialias: true, backgroundColor: 0x000 } });
+    Engine.load("sprites.json");
     document.getElementById("game").appendChild(Engine.view);
 };

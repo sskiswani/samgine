@@ -60,7 +60,10 @@ var scriptBundle = bundler.createWatcher(
     browserSync.reload
 );
 
-gulp.task('build:scripts', () => bundler.rebundle.call(scriptBundle, bundleArgs));
+gulp.task('build:scripts', () =>
+    bundler.rebundle.call(scriptBundle, bundleArgs)
+        .pipe(browserSync.stream({ once: true }))
+);
 
 gulp.task('build', (cb) => series(['copy', 'build:scripts'], cb));
 
@@ -68,6 +71,7 @@ gulp.task('build', (cb) => series(['copy', 'build:scripts'], cb));
 gulp.task('watch', ['build'], () => {
     //~ assets
     gulp.watch(config.html, ['copy:html']).on('change', taskUtils.logChanges);
+    gulp.watch(config.assets, ['copy:assets']).on('change', taskUtils.logChanges);
 
     //~ scripts
     gulp.watch(config.scripts).on('change', taskUtils.logChanges);

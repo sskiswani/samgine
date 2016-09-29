@@ -3,12 +3,11 @@ import * as Events from "./ECSEvents";
 import { Entity } from "./Entity";
 import * as EventEmitter from "eventemitter3";
 
-/** just an exposed handle for the default manager */
-let defaultManager: EntityManager;
-
 export class EntityManager extends EventEmitter {
+    private static _instance = new EntityManager();
+
     public static get Instance(): EntityManager {
-        return defaultManager === null ? new EntityManager() : defaultManager;
+        return EntityManager._instance;
     }
 
     //"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -23,7 +22,7 @@ export class EntityManager extends EventEmitter {
     private constructor() {
         super();
 
-        if (defaultManager == null) { defaultManager = this; }
+        if (EntityManager._instance == null) { EntityManager._instance = this; }
     }
 
     //"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
