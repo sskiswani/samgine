@@ -11,16 +11,15 @@ const bundler = require('./gulp/bundler');
 const config = {
     baseUrl: './src',
     outDir: './bin',
+    assetsDir: './assets',
     bundleName: 'bundle.js',
 
     //~ assets
     get html() { return `${this.baseUrl}/**/*.html`; },
-
-    //~ third party
-    get pixi() { return `./node_modules/pixi.js/bin/pixi.min.js` },
+    get assets() { return `${this.assetsDir}/**/*`; },
 
     //~ scripts
-    get scripts() { return `${this.baseUrl}/**/*.ts`; },
+    get scripts() { return `${this.baseUrl}/**/*.tsx`; },
     get entry() { return [`${this.baseUrl}/index.ts`]; },
 
     get bundleDest() { return `${this.outDir}`; },
@@ -35,9 +34,9 @@ global.config = config;
 gulp.task('clean', () => del.sync('./bin'));
 
 //~ Copy
-gulp.task('copy:pixi', () => taskUtils.copy(config.pixi, config.outDir));
 gulp.task('copy:html', () => taskUtils.copy(config.html, config.outDir));
-gulp.task('copy', ['copy:html', 'copy:pixi']);
+gulp.task('copy:assets', () => taskUtils.copy(config.assets, config.outDir));
+gulp.task('copy', ['copy:html', 'copy:assets']);
 
 
 //""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
