@@ -8,7 +8,7 @@ export class EntityManager extends EventEmitter {
 
     public static get Instance(): EntityManager { return EntityManager._instance; }
 
-    private _entities: IIndex<Entity> = {};
+    private _entities: IIndex<Entity> = [];
     private _tags: IDictionary<number> = {};
 
     public get entities(): IIndex<Entity> { return this._entities; }
