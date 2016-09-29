@@ -18,25 +18,28 @@ export class EntityObserver extends EventEmitter {
         super();
 
         this.aspect = aspect;
-        this.getEntity = manager.get;
+        this.getEntity = manager.get.bind(manager);
 
         // Add callbacks
-        const changeCallback = this.onEntityChange.bind(this);
+        this.addListener(EntityObserver.INSERTED, entity => console.info("got insert", entity));
 
         manager.on(Events.ENTITY_ADDED, entity => {
-            entity.on(Events.ENTITY_CHANGED, changeCallback);
+            console.info(Events.ENTITY_ADDED);
+            entity.on(Events.ENTITY_CHANGED, this.onEntityChange.bind(this));
         });
 
         manager.on(Events.ENTITY_REMOVED, entity => {
+            console.info(Events.ENTITY_REMOVED);
             this.remove(entity);
-            entity.removeListener(Events.ENTITY_CHANGED, changeCallback);
+            entity.removeListener(Events.ENTITY_CHANGED, this.onEntityChange.bind(this));
         });
 
         // Process existing entities
         manager.entities.forEach(entity => {
-            entity.on(Events.ENTITY_CHANGED, changeCallback);
-            changeCallback(entity);
+            entity.on(Events.ENTITY_CHANGED, this.onEntityChange.bind(this));
+            this.onEntityChange(entity);
         });
+
     }
 
     public onEntityRemoved(cb: (e?: Entity) => void) {
@@ -53,6 +56,7 @@ export class EntityObserver extends EventEmitter {
 
         this._ids.splice(idx, 1);
         this.emit(EntityObserver.REMOVED, entity);
+        console.info("emit REMOVED");
     }
 
     protected add(entity: Entity) {
@@ -60,9 +64,11 @@ export class EntityObserver extends EventEmitter {
 
         this._ids.push(entity.id);
         this.emit(EntityObserver.INSERTED, entity);
+        console.info("emit insert");
     }
 
     protected onEntityChange(entity) {
+        console.info(Events.ENTITY_CHANGED, this.aspect.check(entity));
         if (this.aspect.check(entity)) {
             this.add(entity);
         } else {

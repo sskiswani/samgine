@@ -11,4 +11,8 @@ export class Graphic {
     public anchor = { x: 0.5, y: 0.5 };
     public scale = { x: 1, y: 1 };
     public path = "";
+
+    public constructor(args?: Graphic|any) {
+        Object.assign(this, args);
+    }
 }
