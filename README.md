@@ -78,5 +78,5 @@ log_position(entity.get("pos"));
 ```
 
 ## TODO
-- [ ] Query for entities based on components, e.g. `manager.getEntitiesWith(Position, Graphic, Rigidbody);`.
+- [x] Query for entities based on components, e.g. `manager.getEntitiesWith(Position, Graphic, Rigidbody);`.
 - [x] Get rid of the inflexible `EntityWorld` and `EntitySystem`.

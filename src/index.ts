@@ -1,62 +1,34 @@
 import { Engine } from "core";
-import { EntityManager, Entity, Aspect } from "core/ecs";
-import { Transform, Other, Test } from "./components";
-
-const manager = EntityManager.Instance;
-
-let entity = new Entity();
-let other = new Entity();
-entity.tag = "first entity";
-other.tag = "other entity";
-
-let output = document.querySelector("#log");
-manager.addAll(entity, other);
-
-entity.add(new Transform(), new Other());
-other.add(new Other());
-
-let fam = Aspect.from(["Transform", "Other"], ["Test"]);
-console.assert(fam.check(entity), "entity");
-console.assert(!fam.check(other), "other");
-
-fam = Aspect.from(["Other"], [], ["Transform"]);
-console.assert(fam.check(entity), `entity: [ ${entity.components.map(c => c.$name).join(", ")} ] vs: ${fam}`);
-console.assert(!fam.check(other), `other: [ ${other.components.map(c => c.$name).join(", ")} ] vs: ${fam}`);
-
-other.add(new Test());
-fam = Aspect.from([], [Test], ["OTHER", "Transform"]);
-console.assert(fam.check(entity), `entity: [ ${entity.components.map(c => c.$name).join(", ")} ] vs: ${fam}`);
-console.assert(!fam.check(other), `other: [ ${other.components.map(c => c.$name).join(", ")} ] vs: ${fam}`);
-
-fam = Aspect.from([Other], [], [Test]);
-console.assert(!fam.check(entity), `entity: [ ${entity.components.map(c => c.$name).join(", ")} ] vs: ${fam}`);
-console.assert(fam.check(other), `other: [ ${other.components.map(c => c.$name).join(", ")} ] vs: ${fam}`);
-
-fam = Aspect.from([Transform, Other], [Test]);
-fam = Aspect.from([Transform, Other], [Test]);
-fam = Aspect.from([Transform, Other], [Test]);
-
 
 // on load callback
 Engine.on("loaded", () => {
+    //~ Connect to the engine by registering callbacks
 
+    // tick is called once at the beginning of every frame
     Engine.on("tick", fps => {
-        // TODO
+        // tick logic here...
     });
 
+    // next update is called as many times as possible within the target fps
     Engine.on("update", deltaTime => {
-        // TODO
+        // update logic here...
     });
 
+    // render is called at the end of every frame,
+    // at an interval as close to the target fps as possible.
     Engine.on("render", deltaTime => {
+        // render logic here...
+
+        // optionally, let the engine handle the render step
         Engine.renderer.render(Engine.stage);
     });
 
+    // do it!
     Engine.begin();
 });
 
 window.onload = () => {
-    Engine.init({ pixiArgs: { antialias: true, backgroundColor: 0x000 } });
-    Engine.load("sprites.json");
+    Engine.init({ pixiArgs: { antialias: true } });
+    Engine.load("assets/img/spritesheet.json");
     document.getElementById("game").appendChild(Engine.view);
 };
