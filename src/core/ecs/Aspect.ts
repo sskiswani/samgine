@@ -7,6 +7,7 @@ type ComponentType = Function | IComponent | string;
 
 export class Aspect {
     private static _cache: IDictionary<Aspect> = {};
+
     private _all: number[] = [];
     private _none: number[] = [];
     private _one: number[] = [];

@@ -83,10 +83,10 @@ export class Entity extends EventEmitter {
     /**
      * Get an entity's component.
      */
-    public get<T extends IComponent>(comp: ComponentIdentifier): T {
-        if (comp["$id"]) { return this._comps[comp["$id"]] as T; }
-        if (typeof comp === "number") { return this._comps[comp] as T; }
-        return this._comps[getMapping(comp).$id] as T;
+    public get<T>(comp: ComponentIdentifier): T {
+        if (comp["$id"]) { return this._comps[comp["$id"]] as any as T; }
+        if (typeof comp === "number") { return this._comps[comp] as any as T; }
+        return this._comps[getMapping(comp).$id] as any as T;
     }
 
     /**

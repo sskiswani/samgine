@@ -1,13 +1,17 @@
+import { EntityObserver } from "./EntityObserver";
 import { IDictionary, IIndex } from "../Types";
+import { Aspect } from "./Aspect";
 import * as Events from "./ECSEvents";
 import { Entity } from "./Entity";
 import * as EventEmitter from "eventemitter3";
+
 
 export class EntityManager extends EventEmitter {
     private static _instance = new EntityManager();
 
     public static get Instance(): EntityManager { return EntityManager._instance; }
 
+    private _observers = {};
     private _entities: IIndex<Entity> = [];
     private _tags: IDictionary<number> = {};
 
@@ -20,6 +24,10 @@ export class EntityManager extends EventEmitter {
         if (EntityManager._instance === null) {
             EntityManager._instance = this;
         }
+    }
+
+    public register(aspect: Aspect) {
+        return this._observers[aspect.hash] = new EntityObserver(this, aspect);
     }
 
     /** Add an entity to be managed. */
@@ -63,7 +71,7 @@ export class EntityManager extends EventEmitter {
         entity = this._entities[id];
         delete this._entities[id];
 
-        this.emit(Events.ENTITY_ADDED, entity);
+        this.emit(Events.ENTITY_REMOVED, entity);
         return entity;
     }
 

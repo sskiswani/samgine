@@ -1,4 +1,3 @@
-import { timestamp } from "./utils";
 import * as EventEmitter from "eventemitter3";
 import * as _ from "lodash";
 import * as PIXI from "pixi.js";
@@ -48,9 +47,10 @@ class Engine extends EventEmitter {
      */
     public frameTime: number;
 
-    private _dt: number = 0;
-    private _ticking: boolean = false;
-    private _lastTime: number;
+    private _dt = 0;
+    private _now = 0;
+    private _ticking = false;
+    private _lastTime = 0;
 
     private _renderer: PIXI.SystemRenderer;
     private _stage: PIXI.Container;
@@ -73,10 +73,10 @@ class Engine extends EventEmitter {
      * Initialize the engine.
      */
     public init(config: InitializationConfig = {
-        width: 800, height: 450, rate: 1000 / 60, pixiArgs: {}
+        width: 800, height: 450, rate: 1 / 60, pixiArgs: {}
     }) {
         let pixiArgs = _.defaults(config.pixiArgs || {}, Engine.PIXIRendererOptions);
-        this.frameTime = config.rate || (1000 / 60);
+        this.frameTime = config.rate || (1 / 60);
 
         //~ init PIXI
         this._renderer = PIXI.autoDetectRenderer(config.width || 800, config.height || 450, pixiArgs);
@@ -90,8 +90,12 @@ class Engine extends EventEmitter {
      * Begin ticking.
      */
     public begin() {
-        this._lastTime = performance.now();
+        this._lastTime = this.getTimestamp();
         if (!this._ticking) { this.tick(); }
+    }
+
+    public getTimestamp() {
+        return performance.now();
     }
 
     /**
@@ -99,12 +103,14 @@ class Engine extends EventEmitter {
      */
     public tick() {
         if (!this._ticking) { this._ticking = true; }
+
         window.requestAnimationFrame(() => this.tick());
 
         //~ Update timing
-        this._dt = this._dt + Math.min(1, (timestamp() - this._lastTime) / 1000);
+        this._now = this.getTimestamp();
+        this._dt = this._dt + Math.min(1, (this._now - this._lastTime) / 1000);
 
-        this.emit(EVENTS.TICK, this._dt);
+        this.emit("tick", this._dt);
 
         if (this._lastTime === null) { return; }
 
@@ -125,9 +131,7 @@ class Engine extends EventEmitter {
         this.emit(EVENTS.RENDER, this._dt);
 
         this.emit(EVENTS.POSTRENDER, this._dt);
-
-        //~ Get next frame.
-        this._lastTime = timestamp();
+        this._lastTime = this._now;
     }
 
     public load(...assets: string[]) {
