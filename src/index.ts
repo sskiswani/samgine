@@ -1,7 +1,7 @@
-import InputSystem from "./systems/InputSystem";
-import { EntityManager } from "./core/ecs/EntityManager";
-import { Transform, Graphic } from "./components";
+import { Graphic, Transform } from "./components";
 import { Entity } from "./core/ecs/Entity";
+import { EntityManager } from "./core/ecs/EntityManager";
+import InputSystem from "./systems/InputSystem";
 import PixiSystem from "./systems/PixiSystem";
 import { Engine } from "core";
 
