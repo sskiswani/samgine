@@ -1,2 +1,7 @@
-export * from "./Transform";
-export * from "./Graphic";
+import Transform from "./Transform";
+import Graphic from "./Graphic";
+
+export {
+    Transform,
+    Graphic
+}

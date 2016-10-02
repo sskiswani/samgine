@@ -1,7 +1,7 @@
 import { Component } from "../core/ecs";
 
 @Component
-export class Graphic {
+export default class Graphic {
     public alpha = 1;
     public relative = true;
     public tint = 0xffffff;

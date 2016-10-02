@@ -1,8 +1,8 @@
+import InputSystem from "./systems/InputSystem";
 import { EntityManager } from "./core/ecs/EntityManager";
-import { Transform } from "./components";
-import { Graphic } from "./components/Graphic";
+import { Transform, Graphic } from "./components";
 import { Entity } from "./core/ecs/Entity";
-import { PixiSystem } from "./systems/PixiSystem";
+import PixiSystem from "./systems/PixiSystem";
 import { Engine } from "core";
 
 const em = EntityManager.Instance;
@@ -11,20 +11,22 @@ const em = EntityManager.Instance;
 Engine.on("loaded", () => {
     em.add(new Entity().add(
         new Transform({}),
-        new Graphic({ path: "water.png" })
+        new Graphic({ path: "alien_front" })
     ));
 
-    const pixi = new PixiSystem(Engine.renderer, Engine.stage);
+    const systems = {
+        pixi: new PixiSystem(Engine.renderer, Engine.stage),
+        input: new InputSystem()
+    };
 
-    Engine.on("tick", fps => {
-        // TODO
-    });
+    // Engine.on("tick", fps => {});
 
     Engine.on("update", deltaTime => {
-        // TODO
+        systems.input.update();
     });
 
     Engine.on("render", deltaTime => {
+        systems.pixi.update();
         Engine.renderer.render(Engine.stage);
     });
 
@@ -32,7 +34,7 @@ Engine.on("loaded", () => {
 });
 
 window.onload = () => {
-    Engine.init({ pixiArgs: { antialias: true, backgroundColor: 0x000 } });
+    Engine.init({ pixiArgs: { antialias: false, backgroundColor: 0x000, roundPixels: false } });
     Engine.load("sprites.json");
     document.getElementById("game").appendChild(Engine.view);
 };

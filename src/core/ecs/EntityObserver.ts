@@ -21,8 +21,6 @@ export class EntityObserver extends EventEmitter {
         this.getEntity = manager.get.bind(manager);
 
         // Add callbacks
-        this.addListener(EntityObserver.INSERTED, entity => console.info("got insert", entity));
-
         manager.on(Events.ENTITY_ADDED, entity => {
             console.info(Events.ENTITY_ADDED);
             entity.on(Events.ENTITY_CHANGED, this.onEntityChange.bind(this));
@@ -56,7 +54,6 @@ export class EntityObserver extends EventEmitter {
 
         this._ids.splice(idx, 1);
         this.emit(EntityObserver.REMOVED, entity);
-        console.info("emit REMOVED");
     }
 
     protected add(entity: Entity) {
@@ -64,11 +61,9 @@ export class EntityObserver extends EventEmitter {
 
         this._ids.push(entity.id);
         this.emit(EntityObserver.INSERTED, entity);
-        console.info("emit insert");
     }
 
     protected onEntityChange(entity) {
-        console.info(Events.ENTITY_CHANGED, this.aspect.check(entity));
         if (this.aspect.check(entity)) {
             this.add(entity);
         } else {
