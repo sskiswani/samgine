@@ -19,7 +19,7 @@ Engine.on("loaded", () => {
         input: new InputSystem()
     };
 
-    // Engine.on("tick", fps => {});
+    // Engine.on("tick", fps => {    });
 
     Engine.on("update", deltaTime => {
         systems.input.update();
@@ -30,11 +30,12 @@ Engine.on("loaded", () => {
         Engine.renderer.render(Engine.stage);
     });
 
+
     Engine.begin();
 });
 
 window.onload = () => {
-    Engine.init({ pixiArgs: { antialias: false, backgroundColor: 0x000, roundPixels: false } });
+    Engine.init({ pixiArgs: { antialias: true, backgroundColor: 0x000 } });
     Engine.load("sprites.json");
     document.getElementById("game").appendChild(Engine.view);
 };
