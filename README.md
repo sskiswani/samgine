@@ -63,7 +63,7 @@ let entity = new Entity().add(new Position());
 log_position(entity.get("pos"));
 ```
 
-## Managing Entities
+### Managing Entities
 Entity management happens primarily through the `EntityManager`.
 
 ```js
@@ -125,6 +125,42 @@ manager.on(ENTITY_ADDED, entity => {
 manager.on(ENTITY_REMOVED, entity => {
   family.splice(family.indexOf(entity), 1);
 });
+```
+
+Reacting to entity modifications can be simplified via `core/ecs/EntityObserver`.
+
+```js
+import {Aspect, Entity, EntityManager, EntityObserver} from "core/ecs";
+import { Graphic, Transform } from "./components";
+
+const renderAspect = Aspect.from([Graphic, Transform]);
+
+class RenderSystem {
+    constructor() {
+        // Create an observer for an aspect
+        let obs = EntityManager.Instance.register(renderAspect);
+
+        // Respond to new entities
+        obs.onEntityInserted(entity => console.info("New entity that matches the renderAspect.", entity));
+        obs.onEntityRemoved(entity => console.info("An entity matching renderAspect was removed.", entity));
+
+        // Process entities inserted before the callbacks were registered
+        obs.entities.forEach(entity => console.info("Need to prepare an entity", entity));
+    }
+
+    public update() {
+        // There's also the option of just iterating over the entities collected by the observer
+        obs.entities.forEach(entity => {
+            let gfx = entity.get(Graphic);
+            let xform = entity.get(Transform);
+
+            // Do useful stuff here.
+        })
+
+    }
+}
+
+
 ```
 
 ## TODO
