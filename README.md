@@ -107,7 +107,7 @@ family.forEach(entity => render({
     graphic: entity.get("sprite") || entity.get("graphic") || entity.get("image")
 }));
 
-//~ Aspects can be used to help keep a collection of entities up to date.
+// Aspects can be used to help keep a collection of entities up to date.
 family.forEach(entity => {
     // Remove entities if they no longer match.
     entity.on(ECSEvents.ENTITY_CHANGED, entity => {
