@@ -17,7 +17,7 @@ export default class PixiSystem {
     constructor(renderer: PIXI.SystemRenderer, view: PIXI.Container) {
         this.view = view;
         this.renderer = renderer;
-        console.info("rend?", this.renderer.height);
+
         let obs = EntityManager.Instance.register(renderAspect);
         obs.onEntityInserted(this.prepare.bind(this));
         obs.onEntityRemoved(this.destroy.bind(this));
@@ -32,8 +32,26 @@ export default class PixiSystem {
         let gfx = entity.get<Graphic>(Graphic);
 
         let img = PIXI.Texture.fromImage(gfx.path);
-        let sprite = new PIXI.Sprite(img);
-        sprite.anchor.y = 1;
+        let sprite = new Proxy(new PIXI.Sprite(img), {
+            get: (obj, prop) => {
+                if (prop in gfx) { Object.assign(obj[prop], gfx[prop]); }
+                return obj[prop];
+            },
+
+            set: (obj, prop, val) => {
+                if (prop in gfx) {
+                    Object.assign(gfx[prop], val);
+                    Object.assign(obj[prop], gfx[prop]);
+                    return true;
+                }
+
+                return obj[prop] = val;
+            }
+        });
+
+        sprite.anchor.set(gfx.anchor.x, gfx.anchor.y);
+
+
         this._graphics[entity.id] = sprite;
         this.view.addChild(sprite);
     }
@@ -50,8 +68,7 @@ export default class PixiSystem {
         this._observer.entities.forEach(entity => {
             let {position: {x, y}} = entity.get<Transform>(Transform);
             let sprite = this._graphics[entity.id];
-            sprite.x = x;
-            sprite.y = this.renderer.height - y;
+            sprite.position = { x: x, y: this.renderer.height - y };
         });
     }
 }

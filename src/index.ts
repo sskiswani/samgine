@@ -9,6 +9,7 @@ const em = EntityManager.Instance;
 
 // on load callback
 Engine.on("loaded", () => {
+    Engine.handleRendering = true;
     em.add(new Entity().add(
         new Transform({}),
         new Graphic({ path: "alien_front" })
@@ -19,14 +20,14 @@ Engine.on("loaded", () => {
         input: new InputSystem()
     };
 
-    // Engine.on("tick", fps => {    });
-
     Engine.on("update", deltaTime => {
         systems.input.update();
     });
 
     Engine.on("render", deltaTime => {
         systems.pixi.update();
+
+        // let engine render
         Engine.renderer.render(Engine.stage);
     });
 
