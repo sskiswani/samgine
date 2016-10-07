@@ -1,4 +1,4 @@
-import * as EventEmitter from "eventemitter3";
+import {EventEmitter} from "eventemitter3";
 import * as _ from "lodash";
 import * as PIXI from "pixi.js";
 

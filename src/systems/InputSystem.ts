@@ -1,6 +1,6 @@
 import Transform from "../components/Transform";
 import { Aspect, Entity, EntityManager, EntityObserver } from "../core/ecs";
-import { IDictionary } from "core/types";
+import { IDictionary } from "core/Types";
 import { Keys } from "core/utils";
 
 const inputAspect = Aspect.from([Transform]);
@@ -17,8 +17,8 @@ export default class InputSystem {
         document.onkeyup = ev => this.setKey(ev.keyCode || ev.which, false);
     }
 
-    protected setKey(keyCode: number, value: boolean) {
-        this._keys[Keys[keyCode]] = value;
+    protected setKey(keyCode: number|string, value: boolean) {
+        this._keys[typeof keyCode === "string" ? keyCode : Keys[keyCode]] = value;
     }
 
 
@@ -32,7 +32,7 @@ export default class InputSystem {
 
 
         this._observer.entities.forEach(entity => {
-            let xform = entity.get<Transform>(Transform);
+            let xform = entity.get(Transform);
             xform.position = { x: x + xform.position.x, y: y + xform.position.y };
         });
     }
