@@ -1,7 +1,7 @@
 import { ComponentIdentifier, getMapping, IComponent } from "./Component";
 import * as ECSEvents from "./ECSEvents";
 import { EntityManager } from "./EntityManager";
-import * as EventEmitter from "eventemitter3";
+import { EventEmitter } from "eventemitter3";
 import * as _ from "lodash";
 
 // - - - - - - - - - - - - - - - - - - - - -
@@ -66,7 +66,7 @@ export class Entity extends EventEmitter {
     /**
      * Remove a component from this Entity.
      */
-    public remove<T extends IComponent>(component: ComponentIdentifier): T {
+    public remove<T extends IComponent>(component: {new(): T} | ComponentIdentifier): T {
         let {$name, $id} = getMapping(component);
 
         let c = this._comps[$id];
@@ -83,7 +83,7 @@ export class Entity extends EventEmitter {
     /**
      * Get an entity's component.
      */
-    public get<T>(comp: ComponentIdentifier): T {
+    public get<T>(comp: {new(): T} | ComponentIdentifier): T {
         if (comp["$id"]) { return this._comps[comp["$id"]] as any as T; }
         if (typeof comp === "number") { return this._comps[comp] as any as T; }
         return this._comps[getMapping(comp).$id] as any as T;
@@ -92,7 +92,7 @@ export class Entity extends EventEmitter {
     /**
      * Check if an entity has the specified component.
      */
-    public has(comp: ComponentIdentifier) {
+    public has<T>(comp: {new(): T} | ComponentIdentifier) {
         if (comp["$id"]) { return comp["$id"] in this._comps; }
         if (typeof comp === "number") { return comp in this._comps; }
         return getMapping(comp).$id in this._comps;
