@@ -13,6 +13,7 @@ To get a handle on the important stuff `import { Engine, ECS } from 'core'`.
   + `ECS.Entity` is the uniquely identifiable collection of components
   + `ECS.EntityManager` keeps track of entities, emits corresponding events
   + `ECS.Aspect` can be used to filter entities based on what components they do and/or don't have.
+  + `ECS.EntityObserver` helps keep an update to date collection of entities matching a given aspect.
 - `Engine` (`core/Engine`) provides a ['fixed timestep'](http://gafferongames.com/game-physics/fix-your-timestep/) game loop.
   + `engine.on('tick', callback)` will be called at the beginning of every frame.
   + `engine.on('update', callback)` will be called as many times as possible every frame (and at least once).
@@ -63,7 +64,7 @@ let entity = new Entity().add(new Position());
 log_position(entity.get("pos"));
 ```
 
-## Managing Entities
+### Managing Entities
 Entity management happens primarily through the `EntityManager`.
 
 ```js
@@ -106,7 +107,7 @@ family.forEach(entity => render({
     graphic: entity.get("sprite") || entity.get("graphic") || entity.get("image")
 }));
 
-//~ Aspects can be used to help keep a collection of entities up to date.
+// Aspects can be used to help keep a collection of entities up to date.
 family.forEach(entity => {
     // Remove entities if they no longer match.
     entity.on(ECSEvents.ENTITY_CHANGED, entity => {
@@ -125,6 +126,42 @@ manager.on(ENTITY_ADDED, entity => {
 manager.on(ENTITY_REMOVED, entity => {
   family.splice(family.indexOf(entity), 1);
 });
+```
+
+Reacting to entity modifications can be simplified via `core/ecs/EntityObserver`.
+
+```js
+import {Aspect, Entity, EntityManager, EntityObserver} from "core/ecs";
+import { Graphic, Transform } from "./components";
+
+const renderAspect = Aspect.from([Graphic, Transform]);
+
+class RenderSystem {
+    constructor() {
+        // Create an observer for an aspect
+        let obs = EntityManager.Instance.register(renderAspect);
+
+        // Respond to new entities
+        obs.onEntityInserted(entity => console.info("New entity that matches the renderAspect.", entity));
+        obs.onEntityRemoved(entity => console.info("An entity matching renderAspect was removed.", entity));
+
+        // Process entities inserted before the callbacks were registered
+        obs.entities.forEach(entity => console.info("Need to prepare an entity", entity));
+    }
+
+    public update() {
+        // There's also the option of just iterating over the entities collected by the observer
+        obs.entities.forEach(entity => {
+            let gfx = entity.get(Graphic);
+            let xform = entity.get(Transform);
+
+            // Do useful stuff here.
+        })
+
+    }
+}
+
+
 ```
 
 ## TODO

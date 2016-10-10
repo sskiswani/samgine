@@ -30,7 +30,7 @@ export default class PixiSystem {
     protected prepare(entity: Entity) {
 
         if (entity.id in this._graphics) { return; }
-        let gfx = entity.get<Graphic>(Graphic);
+        let gfx = entity.get(Graphic);
 
         let img = PIXI.Texture.fromImage(gfx.path);
         let sprite = new Proxy(new PIXI.Sprite(img), {
@@ -67,7 +67,7 @@ export default class PixiSystem {
 
     public update() {
         this._observer.entities.forEach(entity => {
-            let {position: {x, y}} = entity.get<Transform>(Transform);
+            let {position: {x, y}} = entity.get(Transform);
             let sprite = this._graphics[entity.id];
             sprite.position = { x: x, y: this.renderer.height - y };
         });
