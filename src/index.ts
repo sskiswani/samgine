@@ -36,7 +36,7 @@ Engine.on("loaded", () => {
 });
 
 window.onload = () => {
-    Engine.init({ pixiArgs: { antialias: true, backgroundColor: 0x000 } });
+    Engine.init({ pixiArgs: { antialias: true, backgroundColor: 0, transparent: true } });
     Engine.load("sprites.json");
     document.getElementById("game").appendChild(Engine.view);
 };

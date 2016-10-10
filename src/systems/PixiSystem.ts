@@ -28,6 +28,7 @@ export default class PixiSystem {
     }
 
     protected prepare(entity: Entity) {
+
         if (entity.id in this._graphics) { return; }
         let gfx = entity.get<Graphic>(Graphic);
 
