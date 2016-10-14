@@ -1,10 +1,11 @@
 import Transform from "../components/Transform";
-import { Aspect, Entity, EntityManager, EntityObserver } from "../core/ecs";
-import { IDictionary } from "core/Types";
+import { Aspect, EntityManager, EntityObserver } from "../core/ecs";
+import { IDictionary } from "core/types";
 import { Keys } from "core/utils";
 
-const inputAspect = Aspect.from([Transform]);
+import Engine from "core/Engine";
 
+const inputAspect = Aspect.from([Transform]);
 export default class InputSystem {
     private _observer: EntityObserver;
     private _keys: IDictionary<boolean> = {};
@@ -23,12 +24,18 @@ export default class InputSystem {
 
 
     public update() {
+        const stage = Engine.stage;
         let x = 0, y = 0;
-        if (this._keys["A"]) { x -= 1; }
-        if (this._keys["D"]) { x += 1; }
 
-        if (this._keys["W"]) { y += 1; }
-        if (this._keys["S"]) { y -= 1; }
+        if (this._keys["A"]) { x -= 3; }
+        else if (this._keys["D"]) { x += 3; }
+        if (this._keys["W"]) { y += 3; }
+        else if (this._keys["S"]) { y -= 3; }
+
+        if (this._keys["LEFT"]) { stage.x += 3; }
+        else if (this._keys["RIGHT"]) { stage.x -= 3; }
+        if (this._keys["UP"]) { stage.y += 3; }
+        else if (this._keys["DOWN"]) { stage.y -= 3; }
 
 
         this._observer.entities.forEach(entity => {
@@ -36,5 +43,4 @@ export default class InputSystem {
             xform.position = { x: x + xform.position.x, y: y + xform.position.y };
         });
     }
-
 }

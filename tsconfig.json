@@ -16,8 +16,8 @@
 		"target": "es6"
 	},
 	"include": [
-		"./node_modules/@types/**/*.ts",
-		"./src/**/*.ts"
+		"./node_modules/@types/*.ts",
+		"./src/*.ts"
 	],
 	"exclude": [
 		"bin",

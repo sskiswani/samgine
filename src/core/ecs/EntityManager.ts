@@ -1,4 +1,4 @@
-import { EntityObserver } from "./EntityObserver";
+import EntityObserver from "./EntityObserver";
 import { IDictionary, IIndex } from "../Types";
 import { Aspect } from "./Aspect";
 import * as Events from "./ECSEvents";
