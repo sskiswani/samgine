@@ -1,6 +1,6 @@
-import { EntityObserver } from "../core/ecs/EntityObserver";
+import EntityObserver from "core/ecs/EntityObserver";
 import { Graphic, Transform } from "../components";
-import { Entity, EntityManager } from "../core/ecs";
+import { Entity, EntityManager } from "core/ecs";
 import { Aspect } from "core/ecs";
 import * as PIXI from "pixi.js";
 

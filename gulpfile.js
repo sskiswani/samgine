@@ -30,6 +30,10 @@ global.config = config;
 
 // - - - - - - - - - - - - - - - - - - - - -
 
+function test() {
+
+};
+
 //~ Clean
 gulp.task('clean', () => del.sync('./bin'));
 

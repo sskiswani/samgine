@@ -3,4 +3,8 @@ export * from "./Component";
 export * from "./ECSEvents";
 export * from "./Entity";
 export * from "./EntityManager";
-export * from "./EntityObserver";
+import EntityObserver from "./EntityObserver";
+
+export {
+    EntityObserver
+}

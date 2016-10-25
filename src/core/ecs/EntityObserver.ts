@@ -2,7 +2,7 @@ import { Aspect } from "./Aspect";
 import * as Events from "./ECSEvents";
 import { Entity } from "./Entity";
 import { EntityManager } from "./EntityManager";
-import { EventEmitter } from "eventemitter3";
+import * as EventEmitter from "eventemitter3";
 
 export default class EntityObserver extends EventEmitter {
     public static readonly REMOVED = "removed";

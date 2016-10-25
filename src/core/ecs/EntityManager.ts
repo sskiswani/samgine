@@ -3,7 +3,7 @@ import { IDictionary, IIndex } from "../Types";
 import { Aspect } from "./Aspect";
 import * as Events from "./ECSEvents";
 import { Entity } from "./Entity";
-import { EventEmitter } from "eventemitter3";
+import * as EventEmitter from "eventemitter3";
 
 
 export class EntityManager extends EventEmitter {
