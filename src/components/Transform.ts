@@ -6,7 +6,7 @@ export default class Transform {
     public scale = { x: 0, y: 0 };
     public rotation = 0;
 
-    constructor(args: { position?: { x?: 0, y?: 0 }, scale?: { x?: 0, y?: 0 }, rotation?: 0 }) {
+    constructor(args: { position?: { x?: 0, y?: 0 }, scale?: { x?: 0, y?: 0 }, rotation?: 0 } = {}) {
         Object.assign(this, args);
     }
 }

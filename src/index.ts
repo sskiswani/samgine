@@ -1,4 +1,4 @@
-import { Graphic, Transform } from "./components";
+import { Graphic, Transform, Tilemap } from "./components";
 import { Entity } from "./core/ecs/Entity";
 import { EntityManager } from "./core/ecs/EntityManager";
 import InputSystem from "./systems/InputSystem";
@@ -10,9 +10,15 @@ const em = EntityManager.Instance;
 // on load callback
 Engine.on("loaded", () => {
     Engine.handleRendering = true;
+
     em.add(new Entity().add(
-        new Transform({}),
+        new Transform(),
         new Graphic({ path: "alien_front" })
+    ));
+
+    em.add(new Entity().add(
+        new Transform(),
+        new Tilemap(10, 10)
     ));
 
     const systems = {
