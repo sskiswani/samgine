@@ -7,3 +7,4 @@ bin.zip
 .idea
 .publish
 .DS_Store
+yarn.lock

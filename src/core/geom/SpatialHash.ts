@@ -1,6 +1,7 @@
 import { IDictionary } from '../Types';
 
 type Point = { x: number, y: number }
+
 export default class SpatialHash<T> {
     public readonly binSize: number;
     protected _bins: IDictionary<T[]> = {};
@@ -9,8 +10,7 @@ export default class SpatialHash<T> {
         this.binSize = binSize;
     }
 
-
     public query(p: Point): T[] {
-        return [];
+        return this._bins[`${p.x/this.binSize},${p.y/this.binSize}`];
     }
 }
