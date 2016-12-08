@@ -38,8 +38,8 @@ export default class BitSet {
     }
 
     public wordLength(): number {
-        let length: number, pos: number, _i: number, _ref: number;
-        length = this.store.length;
+        let pos: number, _i: number, _ref: number;
+        let length = this.store.length;
 
         for (pos = _i = _ref = this.store.length - 1;
             _ref <= 0 ? _i <= 0 : _i >= 0;
@@ -52,12 +52,11 @@ export default class BitSet {
     }
 
     public cardinality(): number {
-        let sum, word, _i, _len, _ref;
-        sum = 0;
-        _ref = this.store;
+        let sum = 0;
+        let _ref = this.store;
 
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            word = _ref[_i];
+        for (let _i = 0, _len = _ref.length; _i < _len; _i++) {
+            let word = _ref[_i];
             sum += HAMMING_TABLE[(word >> 0x00) & 0xF];
             sum += HAMMING_TABLE[(word >> 0x04) & 0xF];
             sum += HAMMING_TABLE[(word >> 0x08) & 0xF];
